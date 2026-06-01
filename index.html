@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diesel Technology — Interactive Learning Resource</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1a2e45;
+    --navy-light: #243b55;
+    --red: #c0392b;
+    --red-light: #e74c3c;
+    --gold: #f0a500;
+    --gold-light: #f5c518;
+    --white: #f5f0e8;
+    --muted: #8fa3b1;
+    --card-bg: #1a2e45;
+    --card-border: #2a4060;
+    --success: #27ae60;
+    --warn: #e67e22;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  h1,h2,h3,h4 { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.02em; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1a2e45 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 2rem 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .header-title { display: flex; flex-direction: column; }
+  .header-title .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+  }
+  .header-title h1 { font-size: 2rem; font-weight: 700; color: var(--white); line-height: 1.1; }
+  .header-title h1 span { color: var(--gold); }
+
+  .progress-bar-wrap {
+    flex: 1;
+    max-width: 400px;
+    min-width: 200px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.05em;
+  }
+  .progress-track {
+    background: var(--navy-mid);
+    border-radius: 4px;
+    height: 8px;
+    border: 1px solid var(--card-border);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--red-light));
+    border-radius: 4px;
+    transition: width 0.6s ease;
+    width: 0%;
+  }
+
+  /* INTRO SCREEN */
+  #intro-screen {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+  .intro-hero {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-top: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+  }
+  .intro-hero h2 { font-size: 2.2rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .intro-hero p { color: var(--white); opacity: 0.85; font-size: 1.05rem; margin-bottom: 1rem; }
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .tag {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tag.gold { border-color: var(--gold); color: var(--gold); }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .module-card {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .module-card:hover { border-color: var(--gold); background: var(--card-bg); }
+  .module-card.completed { border-color: var(--success); }
+  .module-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: var(--navy-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 1px solid var(--card-border);
+  }
+  .module-card.completed .module-icon { background: #1a3d26; border-color: var(--success); }
+  .module-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
+  .module-info p { font-size: 12px; color: var(--muted); }
+  .module-info .time { font-size: 11px; color: var(--gold); margin-top: 4px; font-family: 'Barlow Condensed', sans-serif; }
+
+  .start-btn {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 6px;
+    padding: 14px 40px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .start-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .start-btn:active { transform: translateY(0); }
+
+  /* MAIN CONTENT */
+  #course-area { display: none; max-width: 860px; margin: 0 auto; padding: 2rem; }
+
+  /* MODULE NAV */
+  .module-nav {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .nav-btn {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    color: var(--muted);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .nav-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+  .nav-btn.done { border-color: var(--success); color: var(--success); }
+  .nav-btn.done.active { background: var(--success); color: var(--white); border-color: var(--success); }
+
+  /* MODULE CONTENT */
+  .module-section { display: none; }
+  .module-section.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .section-num {
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title h2 { font-size: 1.8rem; color: var(--white); }
+  .section-title p { font-size: 13px; color: var(--gold); font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* CONTENT BLOCKS */
+  .content-block {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .content-block h3 { font-size: 1.2rem; color: var(--gold); margin-bottom: 0.75rem; }
+  .content-block p { color: var(--white); opacity: 0.9; margin-bottom: 0.6rem; }
+  .content-block p:last-child { margin-bottom: 0; }
+
+  .callout {
+    border-left: 4px solid var(--gold);
+    background: rgba(240, 165, 0, 0.07);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .callout.red { border-left-color: var(--red-light); background: rgba(231, 76, 60, 0.07); }
+  .callout.green { border-left-color: var(--success); background: rgba(39, 174, 96, 0.07); }
+  .callout strong { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 6px; font-family: 'Barlow Condensed', sans-serif; }
+  .callout.red strong { color: var(--red-light); }
+  .callout.green strong { color: var(--success); }
+  .callout p { font-size: 0.95rem; opacity: 0.9; }
+
+  /* TWO COLUMN */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* COMPARISON TABLE */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 1.25rem; }
+  .comp-table th {
+    background: var(--navy);
+    color: var(--gold);
+    padding: 10px 14px;
+    text-align: left;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--gold);
+  }
+  .comp-table td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); }
+  .comp-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* DIAGRAM */
+  .diagram-wrap {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .diagram-wrap h3 { font-size: 1.1rem; color: var(--gold); margin-bottom: 1rem; text-align: left; }
+
+  /* STROKE CYCLE ANIMATION */
+  .cycle-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  @media (max-width: 600px) { .cycle-container { grid-template-columns: repeat(2, 1fr); } }
+  .stroke-card {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .stroke-card.active { border-color: var(--gold); background: rgba(240,165,0,0.08); }
+  .stroke-card .stroke-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stroke-card h4 { font-size: 0.9rem; color: var(--white); margin-bottom: 8px; }
+  .stroke-card .stroke-desc { font-size: 12px; color: var(--muted); display: none; }
+  .stroke-card.active .stroke-desc { display: block; }
+  .stroke-arrow { font-size: 20px; color: var(--gold); display: flex; align-items: center; justify-content: center; padding-top: 1rem; }
+
+  /* INTERACTIVE: FUEL SYSTEM */
+  .fuel-system-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+  @media (max-width: 600px) { .fuel-system-grid { grid-template-columns: 1fr; } }
+  .component-btn {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+  }
+  .component-btn:hover { border-color: var(--gold); }
+  .component-btn.selected { border-color: var(--gold); background: rgba(240,165,0,0.08); }
+  .component-btn .comp-name { font-weight: 600; color: var(--gold); font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; margin-bottom: 4px; }
+  .component-btn .comp-role { font-size: 12px; color: var(--muted); }
+  .component-info {
+    background: var(--navy);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+  .component-info.visible { display: block; }
+  .component-info h4 { color: var(--gold); font-size: 1.2rem; margin-bottom: 0.5rem; }
+  .component-info p { font-size: 0.9rem; opacity: 0.9; }
+
+  /* QUIZ */
+  .quiz-wrap { margin-bottom: 1.25rem; }
+  .quiz-q {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .quiz-q p { font-weight: 500; margin-bottom: 1rem; font-size: 1rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--white);
+    text-align: left;
+    font-family: 'Barlow', sans-serif;
+    transition: all 0.15s;
+    opacity: 0.9;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--gold); background: rgba(240,165,0,0.06); }
+  .quiz-opt.correct { border-color: var(--success)!important; background: rgba(39,174,96,0.12)!important; color: var(--success)!important; }
+  .quiz-opt.wrong { border-color: var(--red-light)!important; background: rgba(231,76,60,0.12)!important; color: var(--red-light)!important; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback { font-size: 13px; margin-top: 10px; padding: 8px 12px; border-radius: 6px; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(39,174,96,0.1); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
+  .quiz-feedback.bad { background: rgba(231,76,60,0.1); color: #ff8a7a; border: 1px solid rgba(231,76,60,0.3); }
+
+  .quiz-score {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+  .quiz-score .big-score { font-family: 'Barlow Condensed', sans-serif; font-size: 3.5rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .quiz-score p { color: var(--muted); font-size: 14px; margin-top: 8px; }
+
+  /* NEXT/PREV */
+  .nav-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--card-border);
+    gap: 1rem;
+  }
+  .btn-prev, .btn-next {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--white);
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-next { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+  .btn-prev:hover { border-color: var(--muted); }
+  .btn-next:hover { background: var(--gold-light); }
+  .btn-prev:disabled { opacity: 0.3; cursor: default; }
+  .module-complete-badge {
+    font-size: 12px;
+    color: var(--success);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: none;
+  }
+  .module-complete-badge.show { display: block; }
+
+  /* COMPLETION SCREEN */
+  #completion-screen {
+    display: none;
+    max-width: 700px;
+    margin: 3rem auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  .trophy { font-size: 80px; margin-bottom: 1rem; }
+  #completion-screen h2 { font-size: 3rem; color: var(--gold); margin-bottom: 0.5rem; }
+  #completion-screen p { color: var(--muted); margin-bottom: 1.5rem; }
+
+  .final-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2rem; }
+  @media (max-width: 500px) { .final-grid { grid-template-columns: 1fr; } }
+  .final-stat {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .final-stat .stat-val { font-family: 'Barlow Condensed', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--gold); }
+  .final-stat p { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ANIMATED ENGINE SVG */
+  .engine-anim { margin: 0 auto 1rem; display: block; }
+  @keyframes piston-down { 0%,100%{transform:translateY(0)} 50%{transform:translateY(28px)} }
+  @keyframes piston-up { 0%,100%{transform:translateY(28px)} 50%{transform:translateY(0)} }
+  @keyframes crank { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+  @keyframes smoke { 0%{opacity:0.7;transform:translateY(0) scaleX(1)} 100%{opacity:0;transform:translateY(-20px) scaleX(1.5)} }
+
+  /* PRESSURE-TEMP SLIDER */
+  .slider-block {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .slider-block label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .slider-block input[type=range] { width: 100%; accent-color: var(--gold); }
+  .slider-readout { text-align: center; margin-top: 12px; }
+  .slider-readout .big { font-family: 'Barlow Condensed', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--gold); }
+  .slider-readout .unit { font-size: 14px; color: var(--muted); }
+  .slider-readout .verdict { font-size: 14px; color: var(--white); margin-top: 6px; }
+  .verdict-bar { height: 8px; border-radius: 4px; margin-top: 10px; background: var(--card-border); overflow: hidden; }
+  .verdict-fill { height: 100%; border-radius: 4px; transition: width 0.4s, background 0.4s; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 24px; margin-bottom: 1.25rem; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--card-border); }
+  .tl-item { position: relative; margin-bottom: 1.25rem; }
+  .tl-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); border: 2px solid var(--navy); }
+  .tl-item h4 { font-size: 1rem; color: var(--gold); font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; }
+  .tl-item p { font-size: 13px; color: var(--muted); }
+
+  /* FAULT FINDER GAME */
+  .fault-card {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .fault-card:hover { border-color: var(--warn); }
+  .fault-card.revealed { border-color: var(--success); }
+  .fault-card.revealed .fault-answer { display: block; }
+  .fault-scenario { font-weight: 500; margin-bottom: 8px; }
+  .fault-symptom { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 10px; }
+  .fault-reveal-prompt { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Barlow Condensed', sans-serif; }
+  .fault-answer { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--card-border); font-size: 13px; }
+  .fault-answer strong { color: var(--success); }
+
+  /* KEY TERM */
+  .keyterm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+  .keyterm {
+    background: var(--navy);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .keyterm:hover { border-color: var(--gold); }
+  .keyterm dt { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; color: var(--gold); margin-bottom: 4px; }
+  .keyterm dd { font-size: 12px; color: var(--muted); display: none; }
+  .keyterm.open dd { display: block; color: var(--white); opacity: 0.85; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    header { padding: 1rem; }
+    .header-title h1 { font-size: 1.4rem; }
+    #intro-screen, #course-area { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <span class="eyebrow">East Surrey College — Motor Vehicle</span>
+    <h1>Diesel <span>Technology</span></h1>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span>Your Progress</span>
+      <span id="progress-text">0 of 7 modules complete</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+</header>
+
+<!-- INTRO SCREEN -->
+<div id="intro-screen">
+  <div class="intro-hero">
+    <h2>Welcome to Diesel Technology</h2>
+    <p>This self-directed resource takes you from zero knowledge to a solid working understanding of diesel engine technology. Work through each module at your own pace — you don't need your tutor to move forward.</p>
+    <div class="tag-row">
+      <span class="tag gold">2.5 Hours</span>
+      <span class="tag">Self-Directed</span>
+      <span class="tag">7 Modules</span>
+      <span class="tag">Interactive Quizzes</span>
+      <span class="tag">BTEC Level 2 / 3</span>
+    </div>
+    <p style="font-size:14px; color:var(--muted);">Each module includes reading, interactive activities and a short knowledge check. Complete them in order for the best experience. Your progress is saved as you go.</p>
+  </div>
+
+  <div class="module-grid" id="intro-module-grid">
+    <div class="module-card" onclick="startCourse()">
+      <div class="module-icon">🛢️</div>
+      <div class="module-info">
+        <h4>1. Crude Oil &amp; Diesel Fuel</h4>
+        <p>From oil well to fuel tank</p>
+        <div class="time">~20 mins</div>
+      </div>
+    </div>
+    <div class="module-card" onclick="startCourse()">
+      <div class="module-icon">🔥</div>
+      <div class="module-info">
+        <h4>2. Combustion Principles</h4>
+        <p>How and why diesel ignites</p>
+        <div class="time">~18 mins</div>
+      </div>
+    </div>
+    <div class="module-card" onclick="startCourse()">
+      <div class="module-icon">⚙️</div>
+      <div class="module-info">
+        <h4>3. The Four-Stroke Cycle</h4>
+        <p>Induction, compression, power, exhaust</p>
+        <div class="time">~20 mins</div>
+      </div>
+    </div>
+    <div class="module-card" onclick="startCourse()">
+      <div class="module-icon">💉</div>
+      <div class="module-info">
+        <h4>4. Fuel Systems</h4>
+        <p>From tank to combustion chamber</p>
+        <div class="time">~22 mins</div>
+      </div>
+    </div>
+    <div class="module-card" onclick="startCourse()">
+      <div class="module-icon">🌀</div>
+      <div class="module-info">
+        <h4>5. Turbocharging &amp; Air</h4>
+        <p>Forced induction and air management</p>
+        <div class="time">~18 mins</div>
+      </div>
+    </div>
+    <div class="module-card" onclick="startCourse()">
+      <div class="module-icon">🔧</div>
+      <div class="module-info">
+        <h4>6. Engine Management</h4>
+        <p>ECU, sensors and diagnostics</p>
+        <div class="time">~20 mins</div>
+      </div>
+    </div>
+    <div class="module-card" onclick="startCourse()">
+      <div class="module-icon">⚠️</div>
+      <div class="module-info">
+        <h4>7. Faults &amp; Diagnostics</h4>
+        <p>Common failures, symptoms, solutions</p>
+        <div class="time">~22 mins</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;">
+    <button class="start-btn" onclick="startCourse()">Start Learning →</button>
+  </div>
+</div>
+
+<!-- COURSE AREA -->
+<div id="course-area">
+  <nav class="module-nav" id="module-nav"></nav>
+
+  <!-- ====== MODULE 0: CRUDE OIL & DIESEL FUEL ====== -->
+  <div class="module-section" id="mod-0">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">
+        <p>Module 1 of 7</p>
+        <h2>Crude Oil &amp; Diesel Fuel</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Learning Objective</strong>
+      <p>Describe the origin and composition of crude oil, explain the fractional distillation process, and identify the key properties that make diesel fuel suitable for compression ignition engines.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>What is crude oil?</h3>
+      <p>Crude oil (also called petroleum) is a naturally occurring liquid found in geological formations beneath the Earth's surface. It formed over millions of years from the remains of ancient marine organisms — primarily microscopic algae and plankton — that died and sank to the ocean floor. Over time, layers of sediment buried this organic material, and the combination of heat and pressure slowly converted it into the complex mixture of hydrocarbons we call crude oil.</p>
+      <p>Crude oil is not a single substance — it is a mixture of thousands of different hydrocarbon molecules, ranging from very short (light) chains to very long (heavy) ones. It also contains small amounts of sulphur, nitrogen, oxygen, and trace metals. The exact composition varies significantly depending on where in the world it is extracted.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="content-block">
+        <h3>What is a hydrocarbon?</h3>
+        <p>A hydrocarbon is a molecule made exclusively of hydrogen (H) and carbon (C) atoms. Carbon atoms can form long chains, branched structures, or rings, which is why thousands of different hydrocarbons exist. The length and structure of the carbon chain determines the molecule's physical properties — its boiling point, viscosity, energy content, and how easily it ignites.</p>
+      </div>
+      <div class="content-block">
+        <h3>Light vs heavy crude</h3>
+        <p>Crude oil is graded by density (API gravity) and sulphur content. Light sweet crude (low density, low sulphur) is the most valuable — it produces more petrol, diesel, and jet fuel per barrel. Heavy sour crude requires more intensive refining. The price difference between grades can be significant, affecting fuel costs globally.</p>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE REFINERY TOWER -->
+    <div class="diagram-wrap" id="refinery-wrap" style="padding:1.5rem;">
+      <h3>Fractional distillation — interactive refinery tower</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Click any fraction on the tower to learn about that product.</p>
+      <div style="display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:start;">
+
+        <!-- Tower SVG -->
+        <svg id="refinery-svg" width="180" height="420" viewBox="0 0 180 420" xmlns="http://www.w3.org/2000/svg" style="cursor:pointer;">
+          <!-- Tower body -->
+          <rect x="55" y="30" width="70" height="355" rx="6" fill="#1a2e45" stroke="#2a4060" stroke-width="2"/>
+          <!-- Heat flame at bottom -->
+          <ellipse cx="90" cy="400" rx="22" ry="10" fill="#c0392b" opacity="0.6"/>
+          <ellipse cx="90" cy="393" rx="14" ry="8" fill="#e74c3c" opacity="0.7"/>
+          <ellipse cx="90" cy="387" rx="8" ry="6" fill="#f0a500" opacity="0.8"/>
+          <text x="90" y="416" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#e74c3c">HEAT</text>
+          <!-- Crude oil input arrow -->
+          <line x1="10" y1="370" x2="54" y2="370" stroke="#8fa3b1" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="5" y="365" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8fa3b1">Crude</text>
+          <text x="5" y="376" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8fa3b1">oil in</text>
+          <defs>
+            <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L6,3 z" fill="#8fa3b1"/>
+            </marker>
+          </defs>
+          <!-- Temperature gradient indicator (left side) -->
+          <rect x="42" y="32" width="8" height="353" rx="3" fill="url(#tempGrad)"/>
+          <defs>
+            <linearGradient id="tempGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8fa3b1"/>
+              <stop offset="100%" stop-color="#e74c3c"/>
+            </linearGradient>
+          </defs>
+          <text x="38" y="42" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#8fa3b1">COOL</text>
+          <text x="38" y="390" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#e74c3c">HOT</text>
+
+          <!-- Fraction trays — 7 fractions, clickable -->
+          <!-- LPG - very top -->
+          <g class="fraction-g" id="frac-0" onclick="showFraction(0)" style="cursor:pointer;">
+            <rect x="56" y="32" width="68" height="42" rx="5 5 0 0" fill="#243b55" stroke="#2a4060" stroke-width="1"/>
+            <rect x="56" y="32" width="68" height="42" rx="5 5 0 0" fill="#8fa3b1" opacity="0.15" class="frac-hover"/>
+            <line x1="125" y1="53" x2="158" y2="53" stroke="#8fa3b1" stroke-width="1.5"/>
+            <text x="160" y="50" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8fa3b1">LPG</text>
+            <text x="160" y="60" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#8fa3b1">&lt;40°C</text>
+            <text x="90" y="57" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f5f0e8" font-weight="600">LPG</text>
+          </g>
+
+          <!-- Petrol -->
+          <g class="fraction-g" id="frac-1" onclick="showFraction(1)" style="cursor:pointer;">
+            <rect x="56" y="74" width="68" height="48" fill="#243b55" stroke="#2a4060" stroke-width="1"/>
+            <rect x="56" y="74" width="68" height="48" fill="#f0a500" opacity="0.12" class="frac-hover"/>
+            <line x1="125" y1="98" x2="158" y2="98" stroke="#f0a500" stroke-width="1.5"/>
+            <text x="160" y="95" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f0a500">Petrol</text>
+            <text x="160" y="105" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#f0a500">40–180°C</text>
+            <text x="90" y="101" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f5f0e8" font-weight="600">Petrol</text>
+          </g>
+
+          <!-- Naphtha -->
+          <g class="fraction-g" id="frac-2" onclick="showFraction(2)" style="cursor:pointer;">
+            <rect x="56" y="122" width="68" height="46" fill="#243b55" stroke="#2a4060" stroke-width="1"/>
+            <rect x="56" y="122" width="68" height="46" fill="#f5c518" opacity="0.1" class="frac-hover"/>
+            <line x1="125" y1="145" x2="158" y2="145" stroke="#f5c518" stroke-width="1.5"/>
+            <text x="160" y="142" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f5c518">Naphtha</text>
+            <text x="160" y="152" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#f5c518">160–230°C</text>
+            <text x="90" y="148" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f5f0e8" font-weight="600">Naphtha</text>
+          </g>
+
+          <!-- DIESEL - highlighted -->
+          <g class="fraction-g" id="frac-3" onclick="showFraction(3)" style="cursor:pointer;">
+            <rect x="56" y="168" width="68" height="56" fill="#1a2e45" stroke="#f0a500" stroke-width="2.5"/>
+            <rect x="56" y="168" width="68" height="56" fill="#f0a500" opacity="0.18" class="frac-hover"/>
+            <line x1="125" y1="196" x2="153" y2="196" stroke="#f0a500" stroke-width="2"/>
+            <text x="155" y="193" font-family="Barlow Condensed,sans-serif" font-size="11" fill="#f0a500" font-weight="700">DIESEL</text>
+            <text x="155" y="204" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#f0a500">220–360°C</text>
+            <text x="90" y="195" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="11" fill="#f0a500" font-weight="700">DIESEL</text>
+            <text x="90" y="208" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#f5f0e8">⭐ Our focus</text>
+          </g>
+
+          <!-- Kerosene / Jet -->
+          <g class="fraction-g" id="frac-4" onclick="showFraction(4)" style="cursor:pointer;">
+            <rect x="56" y="224" width="68" height="46" fill="#243b55" stroke="#2a4060" stroke-width="1"/>
+            <rect x="56" y="224" width="68" height="46" fill="#27ae60" opacity="0.1" class="frac-hover"/>
+            <line x1="125" y1="247" x2="158" y2="247" stroke="#27ae60" stroke-width="1.5"/>
+            <text x="160" y="244" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#27ae60">Kerosene</text>
+            <text x="160" y="254" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#27ae60">150–260°C</text>
+            <text x="90" y="250" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f5f0e8" font-weight="600">Kerosene</text>
+          </g>
+
+          <!-- Heavy fuel oil -->
+          <g class="fraction-g" id="frac-5" onclick="showFraction(5)" style="cursor:pointer;">
+            <rect x="56" y="270" width="68" height="46" fill="#243b55" stroke="#2a4060" stroke-width="1"/>
+            <rect x="56" y="270" width="68" height="46" fill="#e74c3c" opacity="0.1" class="frac-hover"/>
+            <line x1="125" y1="293" x2="158" y2="293" stroke="#e74c3c" stroke-width="1.5"/>
+            <text x="160" y="290" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#e74c3c">Fuel Oil</text>
+            <text x="160" y="300" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#e74c3c">300–600°C</text>
+            <text x="90" y="296" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f5f0e8" font-weight="600">Fuel Oil</text>
+          </g>
+
+          <!-- Bitumen / residue -->
+          <g class="fraction-g" id="frac-6" onclick="showFraction(6)" style="cursor:pointer;">
+            <rect x="56" y="316" width="68" height="68" rx="0 0 5 5" fill="#0d1b2a" stroke="#2a4060" stroke-width="1"/>
+            <rect x="56" y="316" width="68" height="68" rx="0 0 5 5" fill="#8fa3b1" opacity="0.08" class="frac-hover"/>
+            <line x1="125" y1="350" x2="158" y2="350" stroke="#8fa3b1" stroke-width="1.5"/>
+            <text x="160" y="347" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#8fa3b1">Bitumen</text>
+            <text x="160" y="357" font-family="Barlow Condensed,sans-serif" font-size="8" fill="#8fa3b1">&gt;600°C</text>
+            <text x="90" y="353" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" fill="#f5f0e8" font-weight="600">Bitumen</text>
+          </g>
+        </svg>
+
+        <!-- Info panel -->
+        <div>
+          <div id="frac-info" style="background:var(--navy);border:1px solid var(--gold);border-radius:8px;padding:1.25rem;margin-bottom:12px;min-height:160px;">
+            <div id="frac-title" style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;color:var(--gold);margin-bottom:6px;">Select a fraction</div>
+            <div id="frac-bp" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+            <div id="frac-body" style="font-size:13px;color:var(--white);opacity:0.9;line-height:1.6;">Click any band on the distillation tower to learn about that petroleum fraction — what it is, what it is used for, and how it relates to diesel.</div>
+          </div>
+          <div style="background:var(--navy);border:1px solid var(--card-border);border-radius:6px;padding:10px 12px;font-size:12px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;color:var(--white);">How distillation works</div>
+            <p style="color:var(--muted);line-height:1.5;">Crude oil is heated in a furnace to ~400°C and fed into the tower as a vapour/liquid mix. Different hydrocarbons condense at different temperatures as the vapour rises up the tower. Shorter molecules boil at lower temperatures, rise higher, and condense near the top. Longer molecules condense lower down or remain liquid.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <h3>From raw distillate to road diesel</h3>
+      <p>The diesel fraction drawn from the distillation column is called straight-run gas oil. It cannot be used directly in a modern vehicle — it requires further processing to meet fuel quality standards. These secondary refining processes include:</p>
+      <table class="comp-table">
+        <tr><th>Process</th><th>Purpose</th></tr>
+        <tr><td>Hydrodesulphurisation (HDS)</td><td>Removes sulphur compounds using hydrogen under pressure. Modern Ultra-Low Sulphur Diesel (ULSD) contains &lt;10 ppm sulphur — down from 2,000+ ppm in the 1990s. Essential for protecting catalytic converters and SCR systems.</td></tr>
+        <tr><td>Hydrocracking</td><td>Breaks longer hydrocarbon chains from the heavy oil fraction into the diesel boiling range, increasing diesel yield from each barrel of crude.</td></tr>
+        <tr><td>Cetane improvement</td><td>Cetane improver additives (e.g. 2-EHN) may be blended in to raise the cetane number to specification.</td></tr>
+        <tr><td>Cold flow additives</td><td>Diesel can wax (solidify) at low temperatures. Cold flow improvers and CFPP (Cold Filter Plugging Point) additives lower the temperature at which waxing occurs — critical for winter diesel grades.</td></tr>
+        <tr><td>Lubricity additives</td><td>ULSD has lower natural lubricity than high-sulphur diesel. Lubricity additives are blended in to protect fuel pump and injector components from wear.</td></tr>
+      </table>
+    </div>
+
+    <div class="two-col">
+      <div class="callout">
+        <strong>What ULSD means for technicians</strong>
+        <p>Ultra-Low Sulphur Diesel is mandatory in the UK and EU. Running older, high-sulphur diesel — or contaminated fuel — in a modern engine will rapidly destroy the DPF, SCR catalyst, and injectors. Fuel contamination is a real-world diagnostic consideration.</p>
+      </div>
+      <div class="callout green">
+        <strong>Biodiesel (FAME)</strong>
+        <p>Fatty Acid Methyl Ester (FAME) is produced from vegetable oils or animal fats. UK pump diesel is currently B7 (up to 7% FAME). Higher blends (B20, B30) are used in some fleets. FAME has higher lubricity but lower energy content and can degrade rubber seals in older fuel systems.</p>
+      </div>
+    </div>
+
+    <!-- DIESEL PROPERTIES INTERACTIVE EXPLORER -->
+    <div class="content-block">
+      <h3>Key diesel fuel properties — click each to expand</h3>
+      <dl class="keyterm-grid">
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Cetane Number</dt>
+          <dd>Measures ignition readiness. Higher = shorter ignition delay = smoother combustion. Standard road diesel: 51–54. Premium diesel: 55–60+. Low cetane causes hard starts, white smoke, and knock on cold mornings.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Density</dt>
+          <dd>Typically 820–845 kg/m³ at 15°C. Denser fuel contains more energy per litre. ECUs on modern engines use a fuel density sensor or temperature compensation to maintain accurate fuel metering.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Viscosity</dt>
+          <dd>Resistance to flow. Diesel must be viscous enough to lubricate the high-pressure pump but thin enough to atomise through the injector nozzle. Spec: 2.0–4.5 mm²/s at 40°C. Too thick = poor atomisation. Too thin = pump wear.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Flash Point</dt>
+          <dd>The minimum temperature at which diesel vapour can ignite with a flame. Diesel: &gt;55°C (much safer than petrol at –43°C). This is why diesel does not readily ignite from a spark — it needs compression heat, not a naked flame.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>CFPP</dt>
+          <dd>Cold Filter Plugging Point — the lowest temperature at which diesel can pass through a filter. Summer diesel CFPP: approx 0°C. Winter diesel: –15 to –22°C. Below CFPP, wax crystals block the fuel filter and starve the engine.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Energy Density</dt>
+          <dd>Diesel contains approximately 35.7 MJ/litre — around 15% more energy per litre than petrol. Combined with the higher thermal efficiency of diesel engines, this gives diesel vehicles significantly better fuel economy.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Sulphur Content</dt>
+          <dd>Modern ULSD: &lt;10 ppm (parts per million) sulphur. Sulphur burns to form sulphur dioxide, which poisons catalytic converters and forms acid in engine oil. Low sulphur is essential for aftertreatment systems to function correctly.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Lubricity</dt>
+          <dd>The fuel's ability to reduce friction in precision fuel system components. Diesel lubricates the high-pressure pump and injectors as it flows through them. ULSD has inherently lower lubricity, so lubricity additives are mandatory in the blend.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Carbon chain length</dt>
+          <dd>Diesel hydrocarbons are predominantly C10–C22 chains (10 to 22 carbon atoms). This range gives the right balance of boiling point, energy content, and combustion characteristics for a compression ignition engine.</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="callout red">
+      <strong>Misfuelling — diesel in a petrol engine and vice versa</strong>
+      <p>Adding petrol to a diesel tank is a serious mistake. Petrol reduces the lubricity of the fuel, causing rapid wear of the high-pressure pump within minutes of running. The pump generates metal debris that contaminates the entire fuel system — injectors, common rail, and filter. If misfuelling is caught before starting, drain the tank. If the engine has run, full fuel system replacement may be required. The narrower filler neck on diesel pumps (22mm vs petrol's 25mm) is designed to prevent this, though diesel nozzles can still be inserted into petrol cars.</p>
+    </div>
+
+    <!-- MODULE 0 QUIZ -->
+    <div class="quiz-wrap" id="quiz-0">
+      <div style="margin-bottom:1rem;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);">Knowledge Check</span></div>
+      <div class="quiz-q" id="q0-0">
+        <p>1. Crude oil is described as a mixture of hydrocarbons. What two elements make up a hydrocarbon molecule?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q0-0',false,'Oxygen is a component of combustion products, not hydrocarbon molecules themselves.')">Carbon and oxygen</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-0',true,'Correct! Hydrocarbons contain only hydrogen (H) and carbon (C) atoms. The length and structure of the carbon chain determines the molecule's properties.')">Carbon and hydrogen</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-0',false,'Nitrogen is found in trace amounts in crude oil but is not what defines a hydrocarbon.')">Nitrogen and carbon</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-0',false,'Sulphur is a contaminant in crude oil, not the defining element of hydrocarbons.')">Sulphur and hydrogen</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q0-0"></div>
+      </div>
+      <div class="quiz-q" id="q0-1">
+        <p>2. At approximately what boiling point range does the diesel fraction separate in the distillation tower?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q0-1',false,'Below 40°C is the boiling range for LPG — the lightest fraction.')">Below 40°C</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-1',false,'40–180°C is the petrol (gasoline) fraction range.')">40–180°C</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-1',true,'Correct! Diesel hydrocarbons condense between approximately 220–360°C in the distillation column — in the middle section of the tower.')">220–360°C</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-1',false,'Above 600°C is where bitumen and heavy residues remain — too heavy and viscous for diesel use.')">Above 600°C</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q0-1"></div>
+      </div>
+      <div class="quiz-q" id="q0-2">
+        <p>3. Why is hydrodesulphurisation (HDS) carried out on diesel fuel during refining?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q0-2',false,'Cetane improvement additives raise the cetane number — HDS has no direct effect on cetane.')">To raise the cetane number</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-2',false,'Cold flow additives prevent waxing — that is a separate process from HDS.')">To prevent the fuel from waxing in cold weather</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-2',true,'Correct! Sulphur dioxide from burning sulphur poisons catalytic converters and SCR systems. Modern ULSD must contain less than 10 ppm sulphur to protect after-treatment systems.')">To reduce sulphur content and protect catalytic converters and SCR systems</button>
+          <button class="quiz-opt" onclick="answer(this,'q0-2',false,'HDS removes sulphur, not water. Water separation is handled at a different stage.')">To remove water contamination from the fuel</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q0-2"></div>
+      </div>
+      <div class="quiz-score" id="score-0"></div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-prev" onclick="changeModule(-1)" disabled>← Previous</button>
+      <span class="module-complete-badge" id="badge-0">✓ Module Complete</span>
+      <button class="btn-next" onclick="changeModule(1)">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- ====== MODULE 1: COMBUSTION PRINCIPLES ====== -->
+  <div class="module-section" id="mod-1">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">
+        <p>Module 2 of 7</p>
+        <h2>Combustion Principles</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Learning Objective</strong>
+      <p>Explain the difference between diesel and petrol combustion, and describe the conditions needed for diesel ignition.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>What is combustion?</h3>
+      <p>Combustion is a rapid chemical reaction between fuel and oxygen that releases energy as heat and light. In an engine, we capture that heat energy and convert it into mechanical motion.</p>
+      <p>The basic equation: <strong style="color:var(--gold)">Fuel + Oxygen → Carbon Dioxide + Water + Energy</strong></p>
+      <p>For combustion to occur, you need three things — often called the "fire triangle": fuel, oxygen, and an ignition source (heat). Remove any one of these and combustion stops.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="content-block">
+        <h3>Petrol engines</h3>
+        <p>Use a spark plug to ignite a pre-mixed air/fuel charge. The mixture is relatively lean and relies on an external electrical spark to begin combustion. Compression ratios are typically 8:1 to 12:1.</p>
+      </div>
+      <div class="content-block">
+        <h3>Diesel engines</h3>
+        <p>Have no spark plug. Instead, air alone is compressed to such a high ratio (16:1 to 23:1) that it becomes hot enough to spontaneously ignite diesel fuel when it is injected directly into the cylinder.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Key Principle — Compression Ignition</strong>
+      <p>Diesel engines work on the principle of compression ignition. The air temperature at the end of the compression stroke can reach 700–900°C. Diesel fuel's auto-ignition temperature is around 250°C — so it ignites immediately on contact with this superheated compressed air.</p>
+    </div>
+
+    <div class="slider-block">
+      <label>Explore: Drag the slider to see what happens to air temperature as compression ratio increases</label>
+      <input type="range" id="comp-slider" min="8" max="24" value="8" step="0.5" oninput="updateCompression(this.value)">
+      <div class="slider-readout">
+        <div><span class="big" id="comp-temp">245</span><span class="unit"> °C</span></div>
+        <div class="verdict" id="comp-verdict">Petrol territory — no ignition without a spark</div>
+        <div class="verdict-bar"><div class="verdict-fill" id="comp-bar" style="width:20%;background:var(--muted)"></div></div>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <h3>Cetane number</h3>
+      <p>Just as petrol has an octane rating (resistance to knock), diesel has a cetane number. Cetane measures how readily diesel fuel ignites under compression. A higher cetane number means quicker, cleaner ignition and smoother combustion.</p>
+      <p>Standard road diesel: cetane 51–54. Premium diesel: cetane 55–60+. Lower cetane can cause hard starting, white smoke on startup, and rough running.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>Diesel vs petrol — key differences at a glance</h3>
+      <table class="comp-table">
+        <tr><th>Property</th><th>Petrol</th><th>Diesel</th></tr>
+        <tr><td>Ignition method</td><td>Spark plug</td><td>Compression heat</td></tr>
+        <tr><td>Compression ratio</td><td>8:1 – 12:1</td><td>16:1 – 23:1</td></tr>
+        <tr><td>Air/fuel mixing</td><td>Pre-mixed</td><td>Direct injection into compressed air</td></tr>
+        <tr><td>Fuel rating</td><td>Octane (RON)</td><td>Cetane number</td></tr>
+        <tr><td>Thermal efficiency</td><td>~30%</td><td>~40–45%</td></tr>
+        <tr><td>NOx emissions</td><td>Lower</td><td>Higher (without treatment)</td></tr>
+      </table>
+    </div>
+
+    <div class="callout green">
+      <strong>Why is diesel more efficient?</strong>
+      <p>The higher compression ratio means the fuel/air mixture is expanded further before the exhaust stroke. More expansion = more work extracted from each combustion event. This is why diesel engines produce more torque and better fuel economy than comparable petrol engines.</p>
+    </div>
+
+    <!-- MODULE 1 QUIZ -->
+    <div class="quiz-wrap" id="quiz-1">
+      <div style="margin-bottom:1rem;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);">Knowledge Check</span></div>
+      <div class="quiz-q" id="q1-0">
+        <p>1. What is the primary method of ignition in a diesel engine?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q1-0',false,'A spark plug provides the ignition source.')">A spark plug fires at TDC</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-0',true,'Correct! Compression raises air temperature high enough to auto-ignite diesel fuel — no spark plug needed.')">Compression raises air temperature until the fuel auto-ignites</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-0',false,'Glow plugs only assist cold starting — they are not the main ignition source.')">A glow plug ignites the mixture</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-0',false,'Fuel lines carry fuel but do not cause ignition.')">High pressure in the fuel line</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q1-0"></div>
+      </div>
+      <div class="quiz-q" id="q1-1">
+        <p>2. A higher cetane number means the fuel will:</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q1-1',false,'Higher cetane increases ignition readiness, not octane resistance.')">Resist compression ignition more</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-1',false,'Cetane has no direct effect on fuel density.')">Increase fuel density</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-1',true,'Correct! Higher cetane = shorter ignition delay, smoother combustion, easier cold starting.')">Ignite more readily with a shorter delay</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-1',false,'Higher cetane actually helps reduce white smoke on cold starts.')">Produce more white smoke</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q1-1"></div>
+      </div>
+      <div class="quiz-q" id="q1-2">
+        <p>3. What is the typical compression ratio range for a diesel engine?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q1-2',false,'That is the typical range for a petrol engine.')">8:1 to 12:1</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-2',false,'Too low for diesel compression ignition to be reliable.')">12:1 to 15:1</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-2',true,'Correct! Diesel engines use high compression ratios of 16:1 to 23:1 to generate enough heat for ignition.')">16:1 to 23:1</button>
+          <button class="quiz-opt" onclick="answer(this,'q1-2',false,'Ratios above 25:1 would create excessive mechanical stress.')">25:1 to 30:1</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q1-2"></div>
+      </div>
+      <div class="quiz-score" id="score-1"></div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-prev" onclick="changeModule(-1)" disabled>← Previous</button>
+      <span class="module-complete-badge" id="badge-1">✓ Module Complete</span>
+      <button class="btn-next" onclick="changeModule(1)">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- ====== MODULE 2: FOUR-STROKE CYCLE ====== -->
+  <div class="module-section" id="mod-2">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">
+        <p>Module 3 of 7</p>
+        <h2>The Four-Stroke Cycle</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Learning Objective</strong>
+      <p>Describe each stroke of the diesel four-stroke cycle, identifying valve positions, piston movement, and what happens to the gas inside the cylinder at each stage.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>Overview</h3>
+      <p>A four-stroke diesel engine completes one full power cycle every two revolutions of the crankshaft. Each revolution involves two strokes (up and down movements of the piston). The four strokes are: Induction → Compression → Power → Exhaust.</p>
+      <p>Click each stroke card below to reveal the detail for that stroke.</p>
+    </div>
+
+    <div class="cycle-container">
+      <div class="stroke-card" id="stroke-0" onclick="toggleStroke(0)">
+        <div class="stroke-num">1</div>
+        <h4>Induction</h4>
+        <div class="stroke-desc">Piston moves <strong style="color:var(--gold)">down</strong>. Inlet valve open, exhaust valve closed. Fresh air is drawn into the cylinder. No fuel yet. The cylinder fills with clean air ready for compression.</div>
+      </div>
+      <div class="stroke-card" id="stroke-1" onclick="toggleStroke(1)">
+        <div class="stroke-num">2</div>
+        <h4>Compression</h4>
+        <div class="stroke-desc">Piston moves <strong style="color:var(--gold)">up</strong>. Both valves closed. Air is compressed to 1/20th of its original volume. Temperature rises to 700–900°C. No fuel injected until near TDC (Top Dead Centre).</div>
+      </div>
+      <div class="stroke-card" id="stroke-2" onclick="toggleStroke(2)">
+        <div class="stroke-num">3</div>
+        <h4>Power</h4>
+        <div class="stroke-desc">Fuel is injected near TDC and <strong style="color:var(--gold)">auto-ignites</strong>. Rapid combustion expands gas, forcing the piston down. Both valves remain closed. This is the only stroke that produces useful work — it drives the crankshaft.</div>
+      </div>
+      <div class="stroke-card" id="stroke-3" onclick="toggleStroke(3)">
+        <div class="stroke-num">4</div>
+        <h4>Exhaust</h4>
+        <div class="stroke-desc">Piston moves <strong style="color:var(--gold)">up</strong>. Exhaust valve open, inlet valve closed. Burned gases are pushed out of the cylinder. At TDC, the exhaust valve closes, inlet valve opens, and the cycle repeats.</div>
+      </div>
+    </div>
+
+    <!-- ANIMATED ENGINE DIAGRAM -->
+    <div class="diagram-wrap">
+      <h3>Animated piston diagram</h3>
+      <svg class="engine-anim" width="280" height="240" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cylinder walls -->
+        <rect x="90" y="30" width="100" height="160" rx="4" fill="none" stroke="#2a4060" stroke-width="3"/>
+        <!-- Cylinder head -->
+        <rect x="88" y="20" width="104" height="20" rx="3" fill="#1a2e45" stroke="#2a4060" stroke-width="2"/>
+        <!-- Inlet valve indicator -->
+        <circle cx="108" cy="30" r="5" fill="#f0a500" id="inlet-v"/>
+        <text x="90" y="15" font-size="9" fill="#8fa3b1" font-family="Barlow Condensed,sans-serif">INLET</text>
+        <!-- Exhaust valve indicator -->
+        <circle cx="172" cy="30" r="5" fill="#2a4060" id="exhaust-v"/>
+        <text x="162" y="15" font-size="9" fill="#8fa3b1" font-family="Barlow Condensed,sans-serif">EXHAUST</text>
+        <!-- Piston group -->
+        <g id="piston-group" style="animation: piston-down 2s ease-in-out infinite;">
+          <rect x="95" y="100" width="90" height="30" rx="4" fill="#243b55" stroke="#f0a500" stroke-width="1.5"/>
+          <!-- Con rod -->
+          <line x1="140" y1="130" x2="140" y2="175" stroke="#2a4060" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <!-- Crankshaft -->
+        <circle cx="140" cy="195" r="18" fill="none" stroke="#2a4060" stroke-width="3"/>
+        <circle cx="140" cy="195" r="4" fill="#f0a500"/>
+        <g style="transform-origin:140px 195px;animation:crank 2s linear infinite;">
+          <circle cx="140" cy="177" r="5" fill="#c0392b"/>
+        </g>
+        <!-- Injector -->
+        <rect x="134" y="20" width="12" height="16" rx="2" fill="#f0a500"/>
+        <line x1="140" y1="36" x2="140" y2="44" stroke="#f5c518" stroke-width="1.5"/>
+        <!-- Stroke label -->
+        <text x="220" y="80" font-size="11" fill="#f0a500" font-family="Barlow Condensed,sans-serif" font-weight="700">LIVE</text>
+        <text x="210" y="95" font-size="10" fill="#8fa3b1" font-family="Barlow Condensed,sans-serif">ANIMATION</text>
+        <!-- smoke -->
+        <ellipse id="smoke1" cx="172" cy="22" rx="6" ry="4" fill="#8fa3b1" style="animation:smoke 1.5s ease-out 0.3s infinite;opacity:0"/>
+        <ellipse id="smoke2" cx="178" cy="18" rx="4" ry="3" fill="#8fa3b1" style="animation:smoke 1.5s ease-out 0.7s infinite;opacity:0"/>
+      </svg>
+    </div>
+
+    <div class="content-block">
+      <h3>Valve timing and overlap</h3>
+      <p>Valves do not open and close exactly at TDC or BDC. There is a period called <strong style="color:var(--gold)">valve overlap</strong> where both inlet and exhaust valves are briefly open together, near TDC between the exhaust and induction strokes. This helps scavenge exhaust gases and improves cylinder filling.</p>
+      <p>The animation below shows exactly when each valve is open across a full 720° cycle. Use the controls to step through each stroke or let it run automatically.</p>
+    </div>
+
+    <!-- VALVE TIMING ANIMATION -->
+    <div class="diagram-wrap" id="vt-wrap" style="padding:1.25rem;">
+      <h3>Interactive valve timing diagram</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+
+        <!-- LEFT: Circular crank angle dial -->
+        <div style="text-align:center;">
+          <svg id="vt-dial" width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
+            <!-- Background circle -->
+            <circle cx="110" cy="110" r="95" fill="#0d1b2a" stroke="#2a4060" stroke-width="1.5"/>
+            <!-- Degree markers -->
+            <g id="vt-ticks"></g>
+            <!-- Stroke zone arcs drawn by JS -->
+            <g id="vt-zones"></g>
+            <!-- Overlap highlight -->
+            <path id="vt-overlap-arc" fill="none" stroke="#f5c518" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+            <!-- Valve lift arcs -->
+            <path id="vt-exhaust-arc" fill="none" stroke="#e74c3c" stroke-width="4" stroke-linecap="round" opacity="0"/>
+            <path id="vt-inlet-arc" fill="none" stroke="#27ae60" stroke-width="4" stroke-linecap="round" opacity="0"/>
+            <!-- Centre hub -->
+            <circle cx="110" cy="110" r="28" fill="#1a2e45" stroke="#2a4060" stroke-width="1.5"/>
+            <!-- Crank needle -->
+            <line id="vt-needle" x1="110" y1="110" x2="110" y2="22" stroke="#f0a500" stroke-width="2.5" stroke-linecap="round"/>
+            <circle id="vt-needle-tip" cx="110" cy="22" r="4" fill="#f0a500"/>
+            <!-- Centre dot -->
+            <circle cx="110" cy="110" r="5" fill="#f0a500"/>
+            <!-- Angle readout in hub -->
+            <text id="vt-angle-text" x="110" y="107" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="14" font-weight="700" fill="#f0a500">0°</text>
+            <text id="vt-rev-text" x="110" y="121" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="9" fill="#8fa3b1">Rev 1</text>
+            <!-- TDC / BDC labels -->
+            <text x="110" y="11" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" font-weight="700" fill="#f5f0e8">TDC</text>
+            <text x="110" y="218" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="10" font-weight="700" fill="#f5f0e8">BDC</text>
+          </svg>
+          <!-- Legend -->
+          <div style="display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:12px;font-family:'Barlow Condensed',sans-serif;">
+            <span><span style="display:inline-block;width:14px;height:3px;background:#e74c3c;vertical-align:middle;margin-right:4px;border-radius:2px;"></span>Exhaust valve</span>
+            <span><span style="display:inline-block;width:14px;height:3px;background:#27ae60;vertical-align:middle;margin-right:4px;border-radius:2px;"></span>Inlet valve</span>
+            <span><span style="display:inline-block;width:14px;height:3px;background:#f5c518;vertical-align:middle;margin-right:4px;border-radius:2px;"></span>Overlap</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: Valve lift bar chart + stroke label + info panel -->
+        <div>
+          <!-- Stroke label -->
+          <div id="vt-stroke-label" style="background:var(--navy);border:1px solid var(--gold);border-radius:6px;padding:10px 14px;margin-bottom:10px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);" id="vt-stroke-name">Exhaust stroke</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="vt-stroke-desc">Piston rising — exhaust gases pushed out</div>
+          </div>
+
+          <!-- Valve status bars -->
+          <div style="margin-bottom:10px;">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Inlet valve</div>
+            <div style="background:var(--navy);border-radius:4px;height:18px;overflow:hidden;border:1px solid var(--card-border);">
+              <div id="vt-inlet-bar" style="height:100%;background:#27ae60;width:0%;transition:width 0.15s,background 0.15s;border-radius:3px;"></div>
+            </div>
+            <div style="font-size:11px;color:#27ae60;margin-top:2px;" id="vt-inlet-status">Closed</div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:0.05em;">Exhaust valve</div>
+            <div style="background:var(--navy);border-radius:4px;height:18px;overflow:hidden;border:1px solid var(--card-border);">
+              <div id="vt-exhaust-bar" style="height:100%;background:#e74c3c;width:0%;transition:width 0.15s,background 0.15s;border-radius:3px;"></div>
+            </div>
+            <div style="font-size:11px;color:#e74c3c;margin-top:2px;" id="vt-exhaust-status">Open</div>
+          </div>
+
+          <!-- Overlap callout (hidden until overlap) -->
+          <div id="vt-overlap-callout" style="background:rgba(245,197,24,0.1);border:1px solid var(--gold-light);border-radius:6px;padding:9px 12px;font-size:12px;color:var(--gold-light);display:none;margin-bottom:10px;">
+            ⚡ <strong>Valve overlap!</strong> Both valves open simultaneously. Exhaust gases help scavenge the cylinder and draw in fresh air charge.
+          </div>
+
+          <!-- Crank angle timing facts -->
+          <div style="background:var(--navy);border:1px solid var(--card-border);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--muted);">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;color:var(--white);">Typical diesel timing events</div>
+            <div id="vt-fact-evo" style="margin-bottom:3px;">EVO (Exhaust opens): <span style="color:#e74c3c;">150° BBDC</span></div>
+            <div id="vt-fact-evc" style="margin-bottom:3px;">EVC (Exhaust closes): <span style="color:#e74c3c;">15° ATDC</span></div>
+            <div id="vt-fact-ivo" style="margin-bottom:3px;">IVO (Inlet opens): <span style="color:#27ae60;">10° BTDC</span></div>
+            <div id="vt-fact-ivc">IVC (Inlet closes): <span style="color:#27ae60;">40° ABDC</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Playback controls -->
+      <div style="display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button id="vt-play-btn" onclick="vtTogglePlay()" style="background:var(--gold);color:var(--navy);border:none;border-radius:5px;padding:8px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:0.05em;">▶ PLAY</button>
+        <input type="range" id="vt-scrub" min="0" max="719" value="0" step="1" oninput="vtScrub(this.value)" style="flex:1;min-width:120px;accent-color:var(--gold);">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);min-width:50px;" id="vt-deg-readout">0°</span>
+        <select id="vt-speed" onchange="vtChangeSpeed()" style="background:var(--navy);color:var(--white);border:1px solid var(--card-border);border-radius:4px;padding:6px 10px;font-size:13px;">
+          <option value="2">Slow</option>
+          <option value="4" selected>Normal</option>
+          <option value="8">Fast</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>TDC and BDC</strong>
+      <p>TDC = Top Dead Centre — the highest point the piston reaches. BDC = Bottom Dead Centre — the lowest point. The distance the piston travels between these points is called the stroke, and defines the engine's displacement.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>Multi-cylinder firing order</h3>
+      <p>Most diesel engines have 4 or 6 cylinders. The cylinders fire in a specific sequence (the firing order) to keep the engine balanced and minimise vibration. A common 4-cylinder firing order is 1-3-4-2. This means cylinder 1 fires first, then 3, then 4, then 2, each separated by 180° of crankshaft rotation.</p>
+      <p>In a 4-stroke, 4-cylinder engine there is a power stroke every 180° — providing smooth, continuous power output.</p>
+    </div>
+
+    <!-- MODULE 2 QUIZ -->
+    <div class="quiz-wrap" id="quiz-2">
+      <div style="margin-bottom:1rem;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);">Knowledge Check</span></div>
+      <div class="quiz-q" id="q2-0">
+        <p>1. During the compression stroke, what are the valve positions?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q2-0',false,'The inlet valve must be closed to allow compression to build.')">Inlet open, exhaust closed</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-0',false,'The exhaust valve is closed during compression.')">Inlet closed, exhaust open</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-0',true,'Correct! Both valves are closed during compression so the air cannot escape.')">Both valves closed</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-0',false,'Valve overlap occurs near TDC between exhaust and induction strokes — not during compression.')">Both valves open</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q2-0"></div>
+      </div>
+      <div class="quiz-q" id="q2-1">
+        <p>2. In a four-stroke engine, how many crankshaft revolutions complete one full power cycle?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q2-1',false,'One revolution only gives two strokes — not a complete cycle.')">1</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-1',true,'Correct! Four strokes = two piston up-down movements = two full crankshaft revolutions.')">2</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-1',false,'Four revolutions would mean 8 strokes per cycle.')">4</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-1',false,'Three revolutions = six strokes, which is not a standard arrangement.')">3</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q2-1"></div>
+      </div>
+      <div class="quiz-q" id="q2-2">
+        <p>3. Which stroke is the only one that produces useful mechanical work?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q2-2',false,'Induction simply draws air into the cylinder — no work is produced.')">Induction</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-2',false,'Compression consumes energy — it does not produce work.')">Compression</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-2',true,'Correct! The power stroke is the only stroke where combustion pushes the piston down and drives the crankshaft.')">Power</button>
+          <button class="quiz-opt" onclick="answer(this,'q2-2',false,'Exhaust expels gases but produces no useful work.')">Exhaust</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q2-2"></div>
+      </div>
+      <div class="quiz-score" id="score-2"></div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-prev" onclick="changeModule(-1)">← Previous</button>
+      <span class="module-complete-badge" id="badge-2">✓ Module Complete</span>
+      <button class="btn-next" onclick="changeModule(1)">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- ====== MODULE 3: FUEL SYSTEMS ====== -->
+  <div class="module-section" id="mod-3">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">
+        <p>Module 4 of 7</p>
+        <h2>Fuel Systems</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Learning Objective</strong>
+      <p>Trace the path of diesel fuel from the tank to the combustion chamber. Identify each component in the fuel system and describe its function.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>The fuel path</h3>
+      <p>Diesel fuel follows a precise path from the fuel tank to the injectors. Each stage conditions and pressurises the fuel before it enters the combustion chamber. Click each component below to learn its function.</p>
+    </div>
+
+    <!-- FLOW PATH DIAGRAM TEXT -->
+    <div style="background:var(--navy);border:1px solid var(--card-border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.25rem;text-align:center;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">
+        <span style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:4px;padding:6px 10px;color:var(--white);">Fuel Tank</span>
+        <span style="color:var(--gold)">→</span>
+        <span style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:4px;padding:6px 10px;color:var(--white);">Lift Pump</span>
+        <span style="color:var(--gold)">→</span>
+        <span style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:4px;padding:6px 10px;color:var(--white);">Fuel Filter</span>
+        <span style="color:var(--gold)">→</span>
+        <span style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:4px;padding:6px 10px;color:var(--white);">High Pressure Pump</span>
+        <span style="color:var(--gold)">→</span>
+        <span style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:4px;padding:6px 10px;color:var(--white);">Common Rail</span>
+        <span style="color:var(--gold)">→</span>
+        <span style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:4px;padding:6px 10px;color:var(--gold);border-color:var(--gold);">Injectors</span>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);margin-bottom:1rem;">Click a component to explore it:</p>
+    <div class="fuel-system-grid">
+      <button class="component-btn" onclick="showComponent(0)">
+        <div class="comp-name">🛢 Fuel Tank</div>
+        <div class="comp-role">Storage and supply</div>
+      </button>
+      <button class="component-btn" onclick="showComponent(1)">
+        <div class="comp-name">⬆ Lift Pump</div>
+        <div class="comp-role">Low-pressure transfer</div>
+      </button>
+      <button class="component-btn" onclick="showComponent(2)">
+        <div class="comp-name">🔍 Fuel Filter</div>
+        <div class="comp-role">Filtration and water separation</div>
+      </button>
+      <button class="component-btn" onclick="showComponent(3)">
+        <div class="comp-name">💪 High Pressure Pump</div>
+        <div class="comp-role">Pressure generation</div>
+      </button>
+      <button class="component-btn" onclick="showComponent(4)">
+        <div class="comp-name">📏 Common Rail</div>
+        <div class="comp-role">Pressure accumulator</div>
+      </button>
+      <button class="component-btn" onclick="showComponent(5)">
+        <div class="comp-name">💉 Injectors</div>
+        <div class="comp-role">Metering and atomisation</div>
+      </button>
+    </div>
+
+    <div class="component-info" id="comp-info">
+      <h4 id="comp-title"></h4>
+      <p id="comp-desc"></p>
+    </div>
+
+    <div class="content-block">
+      <h3>Common rail direct injection (CRDI)</h3>
+      <p>Modern diesel engines use Common Rail Direct Injection. A high-pressure pump pressurises fuel to between 1,600 and 2,500 bar (for reference, a car tyre is around 2–3 bar) and stores it in a steel accumulator rail. All injectors draw from this common rail, allowing injection timing and quantity to be controlled electronically with extreme precision.</p>
+      <p>Older diesel systems (pump-line-nozzle) had mechanical injection timing linked directly to engine speed. CRDI allows multiple injection events per combustion cycle: a pilot injection, main injection, and post injection, which improves efficiency and reduces emissions and combustion noise.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="callout">
+        <strong>Pilot Injection</strong>
+        <p>A tiny amount of fuel injected before the main charge. This pre-heats the combustion chamber slightly, reducing the ignition delay and making combustion more gradual and quiet — reducing the characteristic diesel "clatter".</p>
+      </div>
+      <div class="callout">
+        <strong>Post Injection</strong>
+        <p>A small injection after the main event. Used to raise exhaust temperature for DPF (diesel particulate filter) regeneration, or to add a small amount of energy for emissions control. Does not contribute to power.</p>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <h3>Injector types</h3>
+      <table class="comp-table">
+        <tr><th>Type</th><th>Operating pressure</th><th>Control method</th></tr>
+        <tr><td>Mechanical (jerk pump)</td><td>200–350 bar</td><td>Mechanical camshaft</td></tr>
+        <tr><td>Solenoid CRDI</td><td>1,600–2,000 bar</td><td>ECU-controlled solenoid</td></tr>
+        <tr><td>Piezo CRDI</td><td>2,000–2,500 bar</td><td>ECU-controlled piezo crystal</td></tr>
+      </table>
+      <p>Piezo injectors respond up to 5× faster than solenoid types, allowing more precise multiple-injection events and finer fuel atomisation.</p>
+    </div>
+
+    <!-- MODULE 3 QUIZ -->
+    <div class="quiz-wrap" id="quiz-3">
+      <div style="margin-bottom:1rem;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);">Knowledge Check</span></div>
+      <div class="quiz-q" id="q3-0">
+        <p>1. What is the purpose of the common rail in a CRDI system?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q3-0',false,'The fuel filter handles water separation and contamination removal.')">To filter contaminants from the fuel</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-0',true,'Correct! The common rail stores high-pressure fuel and supplies all injectors at constant pressure, allowing precise electronic control.')">To store high-pressure fuel and supply all injectors at constant pressure</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-0',false,'The lift pump moves fuel from the tank at low pressure.')">To pump fuel from the tank to the filter</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-0',false,'Cooling the fuel is a secondary benefit in some systems, not the primary function.')">To cool the fuel before injection</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q3-0"></div>
+      </div>
+      <div class="quiz-q" id="q3-1">
+        <p>2. What is the main purpose of a pilot injection in CRDI?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q3-1',false,'Pilot injection reduces noise — it does not increase power output.')">To increase maximum power output</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-1',true,'Correct! Pilot injection pre-warms the chamber, reducing the main ignition delay and making combustion smoother and quieter.')">To pre-warm the combustion chamber and reduce ignition delay and knock</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-1',false,'Post injection is used for DPF regeneration, not pilot injection.')">To raise exhaust temperature for DPF regeneration</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-1',false,'Atomisation quality is determined by injector nozzle design and rail pressure.')">To improve fuel atomisation</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q3-1"></div>
+      </div>
+      <div class="quiz-q" id="q3-2">
+        <p>3. Approximately what pressure does a modern CRDI high-pressure pump generate?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q3-2',false,'3–10 bar is the range for the lift pump — the low-pressure side of the circuit.')">3–10 bar</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-2',false,'Around 200–350 bar is typical for older mechanical injection systems.')">200–350 bar</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-2',true,'Correct! Modern CRDI systems operate at 1,600–2,500 bar — an extraordinary pressure that allows fine atomisation.')">1,600–2,500 bar</button>
+          <button class="quiz-opt" onclick="answer(this,'q3-2',false,'500–800 bar is not a standard operating range for CRDI.')">500–800 bar</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q3-2"></div>
+      </div>
+      <div class="quiz-score" id="score-3"></div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-prev" onclick="changeModule(-1)">← Previous</button>
+      <span class="module-complete-badge" id="badge-3">✓ Module Complete</span>
+      <button class="btn-next" onclick="changeModule(1)">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- ====== MODULE 4: TURBOCHARGING ====== -->
+  <div class="module-section" id="mod-4">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">
+        <p>Module 5 of 7</p>
+        <h2>Turbocharging &amp; Air Management</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Learning Objective</strong>
+      <p>Explain how a turbocharger works, describe the role of intercooling, and identify how boost pressure affects engine performance.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>Why turbocharge a diesel?</h3>
+      <p>Combustion requires oxygen. More oxygen in the cylinder means more fuel can be burned, producing more power. A turbocharger forces more air into the cylinder than atmospheric pressure alone would deliver — this is called forced induction.</p>
+      <p>Virtually every modern diesel engine is turbocharged. The benefits are substantial: 30–50% power and torque increase over a naturally aspirated equivalent, with improved thermal efficiency.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>How a turbocharger works</h3>
+      <p>A turbocharger consists of two linked turbine wheels on a single shaft, housed in two separate casings: the turbine housing and the compressor housing.</p>
+      <p><strong style="color:var(--gold)">Turbine side:</strong> Hot exhaust gases leaving the engine hit the turbine wheel, causing it to spin at speeds up to 250,000 rpm. The energy in the exhaust gases would otherwise be wasted — the turbo harvests it.</p>
+      <p><strong style="color:var(--gold)">Compressor side:</strong> The spinning shaft drives the compressor wheel, which draws in fresh air and compresses it before sending it to the engine's inlet manifold. This compressed air is denser and contains more oxygen per unit volume.</p>
+    </div>
+
+    <!-- Interactive boost slider -->
+    <div class="slider-block">
+      <label>Boost pressure explorer: Drag to see how boost pressure affects charge air density and power output potential</label>
+      <input type="range" id="boost-slider" min="0" max="3.5" value="0" step="0.1" oninput="updateBoost(this.value)">
+      <div class="slider-readout">
+        <div><span class="big" id="boost-val">0.0</span><span class="unit"> bar boost</span></div>
+        <div class="verdict" id="boost-verdict">Naturally aspirated — atmospheric pressure only</div>
+        <div class="verdict-bar"><div class="verdict-fill" id="boost-bar" style="width:5%;background:var(--muted)"></div></div>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <h3>Intercooling (charge air cooling)</h3>
+      <p>Compressing air heats it. Hot air is less dense, so it contains fewer oxygen molecules per unit volume — partially offsetting the benefit of turbocharging. An intercooler (also called a charge air cooler) sits between the turbocharger compressor outlet and the engine inlet manifold.</p>
+      <p>Intercoolers work like a radiator: the hot compressed air passes through a matrix of tubes surrounded by ambient air (or coolant). Dropping the charge air temperature by 40–60°C increases its density significantly, improving combustion efficiency further and reducing the risk of pre-detonation.</p>
+    </div>
+
+    <div class="callout green">
+      <strong>The complete air path</strong>
+      <p>Air intake → Air filter → Turbocharger compressor → Intercooler → Inlet manifold → Cylinder. On the exhaust side: Cylinder → Exhaust manifold → Turbocharger turbine → Catalytic converter → DPF → Exhaust pipe.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>Variable geometry turbines (VGT)</h3>
+      <p>A traditional turbocharger has a fixed turbine housing — it is efficient at a narrow range of engine speeds. At low rpm, exhaust flow is insufficient to spin the turbine fast enough (turbo lag). At high rpm, boost can become excessive.</p>
+      <p>VGT turbos (also called variable nozzle turbines, VNT) have adjustable vanes inside the turbine housing. At low rpm, the vanes partially close, accelerating exhaust gas onto the turbine wheel. At high rpm, the vanes open to allow greater flow. This provides strong boost across a much wider rev range and virtually eliminates turbo lag.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="content-block">
+        <h3>Wastegate</h3>
+        <p>On fixed-geometry turbos, a wastegate valve diverts excess exhaust gases around the turbine at high boost pressures, preventing over-boost which could damage the engine or turbo.</p>
+      </div>
+      <div class="content-block">
+        <h3>EGR (Exhaust Gas Recirculation)</h3>
+        <p>A portion of cooled exhaust gas is recirculated back into the intake. This dilutes the oxygen in the charge, lowering peak combustion temperature and reducing NOx (nitrogen oxide) emissions — a key factor in meeting Euro emission standards.</p>
+      </div>
+    </div>
+
+    <!-- MODULE 4 QUIZ -->
+    <div class="quiz-wrap" id="quiz-4">
+      <div style="margin-bottom:1rem;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);">Knowledge Check</span></div>
+      <div class="quiz-q" id="q4-0">
+        <p>1. What drives the turbine wheel of a turbocharger?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q4-0',false,'Engine oil lubricates the turbocharger but does not drive the turbine wheel.')">Pressurised engine oil</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-0',false,'An electric motor is used in some mild-hybrid systems, but not in a standard turbocharger.')">An electric motor</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-0',true,'Correct! Exhaust gases flowing over the turbine wheel spin it, harvesting otherwise-wasted exhaust energy.')">Hot exhaust gases from the engine</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-0',false,'The crankshaft drives superchargers, not turbochargers.')">A belt drive from the crankshaft</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q4-0"></div>
+      </div>
+      <div class="quiz-q" id="q4-1">
+        <p>2. What is the primary purpose of an intercooler?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q4-1',false,'Engine oil is cooled by the oil cooler, not the intercooler.')">To cool the engine oil</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-1',true,'Correct! Cooling the compressed charge air increases its density, meaning more oxygen enters the cylinder, improving efficiency and power.')">To cool the compressed air charge, increasing its density before it enters the engine</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-1',false,'EGR handles NOx reduction by diluting intake oxygen — the intercooler has no direct NOx function.')">To reduce NOx emissions directly</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-1',false,'The intercooler does not affect turbo speed.')">To reduce turbocharger rotational speed</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q4-1"></div>
+      </div>
+      <div class="quiz-q" id="q4-2">
+        <p>3. How does a Variable Geometry Turbo (VGT) reduce turbo lag at low engine speeds?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q4-2',false,'A wastegate diverts gas around the turbine — it does not accelerate flow onto the turbine wheel.')">It opens a wastegate to divert more exhaust flow</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-2',true,'Correct! Closing the vanes at low rpm narrows the turbine housing throat, accelerating exhaust gas velocity onto the turbine wheel and building boost more quickly.')">It closes adjustable vanes to increase exhaust gas velocity over the turbine wheel</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-2',false,'Increasing turbine size would worsen lag, not improve it.')">It increases the size of the turbine wheel</button>
+          <button class="quiz-opt" onclick="answer(this,'q4-2',false,'EGR affects intake composition but has no influence on turbocharger lag.')">It recirculates exhaust gases into the intake</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q4-2"></div>
+      </div>
+      <div class="quiz-score" id="score-4"></div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-prev" onclick="changeModule(-1)">← Previous</button>
+      <span class="module-complete-badge" id="badge-4">✓ Module Complete</span>
+      <button class="btn-next" onclick="changeModule(1)">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- ====== MODULE 5: ENGINE MANAGEMENT ====== -->
+  <div class="module-section" id="mod-5">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">
+        <p>Module 6 of 7</p>
+        <h2>Engine Management Systems</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Learning Objective</strong>
+      <p>Identify the main sensors in a diesel engine management system, explain how the ECU uses sensor data to control fuel injection, and describe what happens when a sensor fails.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>The ECU — electronic control unit</h3>
+      <p>The ECU is the brain of the engine management system. It receives inputs from a network of sensors, processes that data against thousands of stored calibration maps, and outputs control signals to actuators (injectors, EGR valve, VGT actuator, etc.).</p>
+      <p>Modern diesel ECUs process sensor data at speeds exceeding 1,000 calculations per second, continuously adjusting injection timing, duration, and pressure to optimise power, efficiency and emissions for the exact operating conditions.</p>
+    </div>
+
+    <!-- KEY SENSORS GLOSSARY -->
+    <div class="content-block">
+      <h3>Key sensors — click each to expand</h3>
+      <dl class="keyterm-grid">
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>MAF Sensor</dt>
+          <dd>Mass Air Flow sensor — measures the mass of air entering the engine. The ECU uses this to calculate the correct fuel quantity for the desired air/fuel ratio.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>MAP Sensor</dt>
+          <dd>Manifold Absolute Pressure sensor — measures inlet manifold pressure (boost pressure). Tells the ECU how much air is being delivered so it can adjust fuelling and VGT position.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>CKP Sensor</dt>
+          <dd>Crankshaft Position sensor — reads a reluctor wheel on the crankshaft. Provides engine speed (RPM) and piston position data. Critical for injection timing. Engine will not run without this sensor.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>CMP Sensor</dt>
+          <dd>Camshaft Position sensor — identifies which cylinder is on its compression stroke, allowing the ECU to synchronise sequential injection events.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>ECT Sensor</dt>
+          <dd>Engine Coolant Temperature sensor — reports engine temperature. The ECU uses richer fuelling and different injection timing when cold. If this fails, the ECU often defaults to a fixed warm-engine strategy, causing poor cold starts.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Rail Pressure Sensor</dt>
+          <dd>Monitors actual fuel pressure in the common rail. If pressure drops or exceeds target, the ECU adjusts the high-pressure pump output. A faulty sensor can cause limp-home mode.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>EGT Sensor</dt>
+          <dd>Exhaust Gas Temperature sensor — monitors exhaust temperature to protect the turbo and DPF. Critical during DPF regeneration cycles.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Lambda Sensor</dt>
+          <dd>Measures oxygen content in the exhaust. Diesel engines run lean (excess air), but lambda sensors help monitor combustion completeness and assist SCR (selective catalytic reduction) systems.</dd>
+        </div>
+        <div class="keyterm" onclick="this.classList.toggle('open')">
+          <dt>Throttle Position</dt>
+          <dd>Unlike petrol engines, diesels don't have a conventional throttle. The accelerator pedal position sensor (APP) directly informs the ECU of driver demand, which is translated into injection quantity and timing.</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="callout red">
+      <strong>Limp-home mode</strong>
+      <p>When the ECU detects a critical sensor failure or out-of-range reading, it may activate a "limp-home" or "reduced performance" mode. This limits engine power (sometimes to 1,500 rpm) to protect the engine from potential damage. A diagnostic tool is required to read the fault codes and identify the failed component.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>Emissions after-treatment systems</h3>
+      <p>Modern diesel engines must meet strict Euro 6 (or equivalent) emission standards. Several after-treatment devices work together:</p>
+      <table class="comp-table">
+        <tr><th>Device</th><th>What it does</th></tr>
+        <tr><td>DPF — Diesel Particulate Filter</td><td>Traps soot particles from exhaust. Periodically "regenerates" by burning off accumulated soot at high temperature.</td></tr>
+        <tr><td>DOC — Diesel Oxidation Catalyst</td><td>Converts CO and unburned hydrocarbons into CO₂ and water using a platinum catalyst.</td></tr>
+        <tr><td>SCR — Selective Catalytic Reduction</td><td>Injects AdBlue (urea solution) into exhaust to convert NOx into harmless nitrogen and water.</td></tr>
+        <tr><td>EGR — Exhaust Gas Recirculation</td><td>Recirculates cooled exhaust gas into intake to reduce peak combustion temperature and lower NOx formation.</td></tr>
+      </table>
+    </div>
+
+    <div class="content-block">
+      <h3>OBD — On-Board Diagnostics</h3>
+      <p>All vehicles from 2001 (petrol) and 2004 (diesel) sold in Europe must be OBD-II compliant. The OBD system continuously monitors emission-related components and stores Diagnostic Trouble Codes (DTCs) when a fault is detected. A "check engine" or "engine management" warning lamp illuminates on the dashboard.</p>
+      <p>DTCs follow a standard format: <strong style="color:var(--gold)">P0XXX</strong> (powertrain), <strong style="color:var(--gold)">B0XXX</strong> (body), <strong style="color:var(--gold)">C0XXX</strong> (chassis), <strong style="color:var(--gold)">U0XXX</strong> (network). A diagnostic scan tool plugged into the OBD port (beneath the dashboard) reads these codes and provides freeze-frame data showing conditions at the time of the fault.</p>
+    </div>
+
+    <!-- MODULE 5 QUIZ -->
+    <div class="quiz-wrap" id="quiz-5">
+      <div style="margin-bottom:1rem;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);">Knowledge Check</span></div>
+      <div class="quiz-q" id="q5-0">
+        <p>1. Which sensor is so critical that an engine will generally not run without it?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q5-0',false,'ECT failure causes cold-start issues but the engine can usually still run.')">Engine Coolant Temperature (ECT) sensor</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-0',false,'MAF failure will affect fuelling accuracy but a backup strategy usually allows the engine to run.')">Mass Air Flow (MAF) sensor</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-0',true,'Correct! Without the CKP sensor the ECU cannot determine crankshaft position or engine speed, so injection timing is impossible.')">Crankshaft Position (CKP) sensor</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-0',false,'Lambda sensor failure causes increased emissions but the engine will continue to operate.')">Lambda (oxygen) sensor</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q5-0"></div>
+      </div>
+      <div class="quiz-q" id="q5-1">
+        <p>2. What does SCR (Selective Catalytic Reduction) reduce in diesel exhaust?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q5-1',false,'Soot and particulates are captured by the DPF, not the SCR.')">Soot particles (PM)</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-1',false,'The DOC handles carbon monoxide and unburned hydrocarbons.')">Carbon monoxide (CO)</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-1',true,'Correct! SCR injects AdBlue (urea) into the exhaust to convert NOx (nitrogen oxides) into harmless nitrogen gas and water.')">Nitrogen oxides (NOx)</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-1',false,'CO₂ is a product of combustion and is not reduced by any current after-treatment device.')">Carbon dioxide (CO₂)</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q5-1"></div>
+      </div>
+      <div class="quiz-q" id="q5-2">
+        <p>3. What does a DTC code beginning with "P" relate to?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q5-2',false,'"B" codes relate to body systems such as airbags and climate control.')">Body systems</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-2',true,'Correct! P codes (Powertrain) cover the engine, transmission, and fuel system — the most common category for diesel faults.')">Powertrain (engine and transmission)</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-2',false,'"C" codes relate to chassis systems such as ABS and stability control.')">Chassis systems</button>
+          <button class="quiz-opt" onclick="answer(this,'q5-2',false,'"U" codes relate to communication network faults between control modules.')">Network communications</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q5-2"></div>
+      </div>
+      <div class="quiz-score" id="score-5"></div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-prev" onclick="changeModule(-1)">← Previous</button>
+      <span class="module-complete-badge" id="badge-5">✓ Module Complete</span>
+      <button class="btn-next" onclick="changeModule(1)">Next Module →</button>
+    </div>
+  </div>
+
+  <!-- ====== MODULE 6: FAULTS & DIAGNOSTICS ====== -->
+  <div class="module-section" id="mod-6">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">
+        <p>Module 7 of 7</p>
+        <h2>Faults &amp; Diagnostics</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Learning Objective</strong>
+      <p>Recognise common diesel engine faults from their symptoms. Apply a structured diagnostic approach to identify the most likely cause of a fault before testing.</p>
+    </div>
+
+    <div class="content-block">
+      <h3>Diagnostic methodology</h3>
+      <p>Good diagnostics is not guesswork — it is a systematic process. Always follow these steps before replacing any component:</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <h4>1. Gather information</h4>
+          <p>Talk to the driver. When does the fault occur? Any recent work? Warning lights? Unusual smells or sounds?</p>
+        </div>
+        <div class="tl-item">
+          <h4>2. Verify the complaint</h4>
+          <p>Replicate the fault yourself if possible. A fault you cannot reproduce is harder to diagnose reliably.</p>
+        </div>
+        <div class="tl-item">
+          <h4>3. Retrieve fault codes</h4>
+          <p>Connect a diagnostic scan tool to the OBD port. Read and record all stored DTCs and freeze-frame data.</p>
+        </div>
+        <div class="tl-item">
+          <h4>4. Research the code</h4>
+          <p>Understand what the code means. A P0191 (rail pressure sensor range) could mean a faulty sensor or a genuine low rail pressure — they must be differentiated.</p>
+        </div>
+        <div class="tl-item">
+          <h4>5. Test before replacing</h4>
+          <p>Use live data, a multimeter, or a pressure gauge to test the suspect component. Never replace a component on a code alone without verification.</p>
+        </div>
+        <div class="tl-item">
+          <h4>6. Fix, verify, clear</h4>
+          <p>Complete the repair, clear the fault codes, and verify the fix under the conditions that originally caused the fault.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SMOKE COLOUR GUIDE -->
+    <div class="content-block">
+      <h3>Exhaust smoke colour diagnosis</h3>
+      <table class="comp-table">
+        <tr><th>Smoke colour</th><th>What it indicates</th><th>Common causes</th></tr>
+        <tr><td style="color:#e8e8e8;">White (cold start)</td><td>Unburned fuel or coolant vapour</td><td>Normal on cold start; persists = failed glow plugs, head gasket leak, low compression</td></tr>
+        <tr><td style="color:#888">Blue/grey</td><td>Oil burning in combustion</td><td>Worn piston rings, worn valve stem seals, turbocharger oil seal failure</td></tr>
+        <tr><td style="color:#6b4c1a;">Black</td><td>Excess unburned fuel</td><td>Faulty injectors, blocked air filter, EGR fault, fuelling overfuelling, low boost</td></tr>
+        <tr><td style="color:#a0d8a0;">No visible smoke</td><td>Complete combustion</td><td>Normal operation (with correctly functioning DPF/DOC)</td></tr>
+      </table>
+    </div>
+
+    <!-- FAULT FINDER GAME -->
+    <div class="content-block">
+      <h3>Fault scenario practice</h3>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:1rem;">Read each scenario. Form your diagnosis. Then click the card to reveal the likely cause and reasoning.</p>
+    </div>
+
+    <div class="fault-card" onclick="this.classList.toggle('revealed')">
+      <div class="fault-scenario">🚗 Scenario 1 — 2019 Ford Transit 2.0 TDCi</div>
+      <div class="fault-symptom">Symptom: Hard starting when cold, white smoke for 2–3 minutes after start, then clears. No fault codes stored. Running fine once warm.</div>
+      <div class="fault-reveal-prompt">Click to reveal likely cause →</div>
+      <div class="fault-answer"><strong>Likely cause: Failed glow plug(s).</strong> Glow plugs pre-heat the combustion chamber for cold starting. When they fail, there is insufficient heat to achieve auto-ignition quickly, leading to a long crank, incomplete combustion (white smoke from unburned fuel) and rough running until the engine warms via normal combustion. No fault code is common because glow plug monitors vary by vehicle. Test: glow plug resistance test with a multimeter — a working plug reads 0.5–2 ohms; an open circuit or very high reading = failed plug.</div>
+    </div>
+
+    <div class="fault-card" onclick="this.classList.toggle('revealed')">
+      <div class="fault-scenario">🚗 Scenario 2 — 2016 Volkswagen Passat 2.0 TDI</div>
+      <div class="fault-symptom">Symptom: Intermittent loss of power, engine enters limp mode at higher boost demands. DTC stored: P0299 — Turbocharger underboost. No smoke. Boost builds then drops.</div>
+      <div class="fault-reveal-prompt">Click to reveal likely cause →</div>
+      <div class="fault-answer"><strong>Likely cause: VGT actuator fault or sticking VGT vanes.</strong> P0299 means the MAP sensor is reading lower boost than the ECU commanded. On a VGT-equipped engine, the most common causes are a faulty VGT actuator (electronic or pneumatic), or carbon-clogged variable vanes that are sticking and not responding to ECU commands. Secondary check: inspect for boost leaks (split intercooler hose, loose jubilee clip). Live data test: observe MAP sensor vs target boost — if target is high but actual is low, the turbo or actuator is the fault. Vane cleaning with specialist additive or physical cleaning is often the repair.</div>
+    </div>
+
+    <div class="fault-card" onclick="this.classList.toggle('revealed')">
+      <div class="fault-scenario">🚗 Scenario 3 — 2014 BMW 320d F30</div>
+      <div class="fault-symptom">Symptom: Heavy black smoke under acceleration, poor power, fuel consumption increased. DTC: P0401 — EGR flow insufficient. Air filter recently replaced.</div>
+      <div class="fault-reveal-prompt">Click to reveal likely cause →</div>
+      <div class="fault-answer"><strong>Likely cause: EGR valve stuck open (or heavily carboned) causing excessive exhaust gas recirculation.</strong> Despite the code suggesting EGR flow is insufficient, a partially stuck-open EGR can flood the intake with exhaust gas, displacing fresh air and causing rich-running symptoms (black smoke, poor power). P0401 can be triggered by an EGR valve that is not reaching its commanded position — stuck open produces black smoke and power loss. Verify with live data: observe EGR valve position vs commanded position. A blocked or stuck valve requires cleaning or replacement. Also check intake manifold for carbon build-up which is common on direct injection diesels.</div>
+    </div>
+
+    <div class="fault-card" onclick="this.classList.toggle('revealed')">
+      <div class="fault-scenario">🚗 Scenario 4 — 2018 Mercedes Sprinter 2.2 CDI</div>
+      <div class="fault-symptom">Symptom: DPF warning light illuminated. Power reduced. Vehicle has been used predominantly for short journeys. No active fault codes beyond DPF soot load warning.</div>
+      <div class="fault-reveal-prompt">Click to reveal likely cause →</div>
+      <div class="fault-answer"><strong>Likely cause: DPF blocked due to failed passive/active regeneration.</strong> The DPF captures soot particles. In normal driving, regeneration occurs passively (sustained motorway speeds generating exhaust temperatures above 600°C) or actively (ECU injects extra fuel to raise exhaust temperature). Short, slow urban journeys never allow the DPF to reach regeneration temperature, so soot accumulates. Resolution: a forced regeneration using a diagnostic tool (stationary regen), or a 30-minute sustained motorway drive. If severely blocked (soot load >75%), cleaning with specialist DPF cleaner fluid may be needed. Note: continued ignore may require DPF replacement — a £1,000+ part on many vehicles.</div>
+    </div>
+
+    <div class="content-block" style="margin-top:1.25rem;">
+      <h3>Common diesel faults — quick reference</h3>
+      <table class="comp-table">
+        <tr><th>Symptom</th><th>First suspects</th></tr>
+        <tr><td>Hard cold start</td><td>Glow plugs, fuel filter (wax/water), low compression</td></tr>
+        <tr><td>Black smoke under load</td><td>Injectors overfuelling, EGR fault, blocked air filter, low boost</td></tr>
+        <tr><td>Blue smoke at startup</td><td>Turbo oil seal, valve stem seals, piston rings</td></tr>
+        <tr><td>White smoke (persistent)</td><td>Coolant in combustion, failed glow plugs, low compression</td></tr>
+        <tr><td>Rough idle / misfire</td><td>Faulty injector (leaking/stuck), low compression, air in fuel</td></tr>
+        <tr><td>Loss of power (limp mode)</td><td>Boost leak, VGT fault, rail pressure fault, MAF/MAP failure</td></tr>
+        <tr><td>Excessive fuel consumption</td><td>EGR fault, leaking injector, low tyre pressure, dragging brakes</td></tr>
+        <tr><td>Diesel knock</td><td>Low cetane fuel, injector timing, air in fuel, worn injectors</td></tr>
+      </table>
+    </div>
+
+    <!-- MODULE 6 QUIZ -->
+    <div class="quiz-wrap" id="quiz-6">
+      <div style="margin-bottom:1rem;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);">Knowledge Check</span></div>
+      <div class="quiz-q" id="q6-0">
+        <p>1. A diesel engine produces persistent white smoke after warming up, and the coolant level is dropping gradually. What is the most likely cause?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q6-0',false,'Glow plug failure causes hard cold starting but would not cause coolant loss.')">Failed glow plugs</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-0',false,'Black smoke indicates excess fuel, not water or coolant in the combustion chamber.')">Injectors overfuelling</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-0',true,'Correct! Coolant entering the combustion chamber via a head gasket failure produces persistent white steam-like smoke and causes coolant level to drop.')">Head gasket failure allowing coolant into the combustion chamber</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-0',false,'EGR faults typically cause black smoke and power loss — not white smoke with coolant loss.')">EGR valve fault</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q6-0"></div>
+      </div>
+      <div class="quiz-q" id="q6-1">
+        <p>2. At which step in the diagnostic process should you physically test a component?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q6-1',false,'You should gather information and verify the complaint before retrieving codes.')">Before retrieving fault codes</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-1',false,'Replacing a component before testing is an assumption, not a diagnosis — it can be expensive and wrong.')">Immediately after reading the fault code</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-1',true,'Correct! You should research the fault code first to understand what it means before deciding what to test and how.')">After researching the fault code and understanding what it means</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-1',false,'Testing after replacement means the part was already fitted — you cannot then verify whether the fault was real.')">After replacing the suspect component</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q6-1"></div>
+      </div>
+      <div class="quiz-q" id="q6-2">
+        <p>3. A DPF warning light illuminates on a van used exclusively for short urban journeys. No fault codes beyond high soot load. What should you try first?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q6-2',false,'DPF replacement is expensive and premature — the filter may just need regeneration.')">Replace the DPF immediately</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-2',false,'The injectors are unlikely to be the cause — the symptom is consistent with soot accumulation from short journeys.')">Replace the injectors</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-2',true,'Correct! Short journeys prevent passive DPF regeneration. A diagnostic forced regeneration or a sustained motorway drive allows temperatures to reach the regeneration threshold and burn off accumulated soot.')">Carry out a forced regeneration using a diagnostic tool or sustained motorway drive</button>
+          <button class="quiz-opt" onclick="answer(this,'q6-2',false,'Fitting a blanking plate removes emissions equipment and is illegal on a road vehicle.')">Fit a DPF blanking plate</button>
+        </div>
+        <div class="quiz-feedback" id="fb-q6-2"></div>
+      </div>
+      <div class="quiz-score" id="score-6"></div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn-prev" onclick="changeModule(-1)">← Previous</button>
+      <span class="module-complete-badge" id="badge-6">✓ Module Complete</span>
+      <button class="btn-next" onclick="finishCourse()">Complete Course 🏁</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION SCREEN -->
+<div id="completion-screen">
+  <div class="trophy">🏆</div>
+  <h2>Course Complete!</h2>
+  <p>You've worked through all seven modules of Diesel Technology. Here's your session summary:</p>
+  <div class="final-grid">
+    <div class="final-stat">
+      <div class="stat-val" id="final-modules">6/6</div>
+      <p>Modules completed</p>
+    </div>
+    <div class="final-stat">
+      <div class="stat-val" id="final-score">—</div>
+      <p>Quiz questions correct</p>
+    </div>
+    <div class="final-stat">
+      <div class="stat-val" id="final-pct">—</div>
+      <p>Overall score</p>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--muted);margin-bottom:2rem;">You can use the module navigation at the top to review any section. Share your score with your tutor.</p>
+  <button class="start-btn" onclick="restartCourse()" style="margin-right:12px;">↺ Review from Start</button>
+</div>
+
+<script>
+  const MODULES = ['Crude Oil & Diesel Fuel','Combustion Principles','Four-Stroke Cycle','Fuel Systems','Turbocharging & Air','Engine Management','Faults & Diagnostics'];
+  const TOTAL_MODULES = 7;
+  let currentModule = 0;
+  let moduleComplete = new Array(TOTAL_MODULES).fill(false);
+  let quizScores = new Array(TOTAL_MODULES).fill(null);
+  let quizAnswered = Array.from({length:TOTAL_MODULES}, ()=>({answered:0, correct:0}));
+  const QPC = 3;
+
+  const fracData = [
+    {title:'LPG (Liquefied Petroleum Gas)',bp:'Boiling point: below 40°C | Carbon chain: C1–C4',body:'LPG is the lightest fraction — methane, ethane, propane, and butane. These gases condense only under pressure, which is why LPG is stored in pressurised cylinders. Uses include heating, cooking, and autogas vehicles. Too light and volatile for diesel engines — it would evaporate before reaching the cylinder.'},
+    {title:'Petrol (Gasoline)',bp:'Boiling point: 40–180°C | Carbon chain: C4–C12',body:'Petrol is a complex blend of lighter hydrocarbons optimised for spark ignition. Its lower cetane number (around 5–20) means it will not self-ignite under diesel compression ratios — if anything it would knock. Adding petrol to a diesel tank reduces fuel lubricity, causing rapid pump wear within minutes of running.'},
+    {title:'Naphtha',bp:'Boiling point: 160–230°C | Carbon chain: C6–C10',body:'Naphtha sits between petrol and kerosene. It is a key feedstock for the petrochemical industry — used to produce plastics, solvents, and as a reforming feedstock to produce higher-octane petrol blending components. Not used directly as a fuel in vehicles.'},
+    {title:'Diesel (Gas Oil) ⭐',bp:'Boiling point: 220–360°C | Carbon chain: C10–C22',body:'This is our primary focus. The diesel fraction — also called gas oil or middle distillate — condenses in the middle section of the tower. Its C10–C22 carbon chain length gives the right balance of energy density, viscosity, cetane number, and boiling point for compression ignition. The raw fraction (straight-run gas oil) is further processed through hydrodesulphurisation, cetane improvement, and cold-flow additive blending before it reaches the pump. Around 25–35% of a barrel of crude oil becomes diesel.'},
+    {title:'Kerosene / Jet Fuel',bp:'Boiling point: 150–260°C | Carbon chain: C8–C16',body:'Kerosene overlaps with diesel in boiling range but is refined differently. Aviation kerosene (Jet-A, Jet-A1) is highly refined for consistent combustion at altitude. Domestic heating oil is closely related to diesel. Red diesel (gas oil) used in off-road machinery is essentially the same hydrocarbon fraction as road diesel but with a red dye added and without road tax — using it in road vehicles is illegal.'},
+    {title:'Heavy Fuel Oil',bp:'Boiling point: 300–600°C | Carbon chain: C20–C70',body:'Heavy fuel oil (HFO) is used in large marine diesel engines and power stations. It is far too viscous for automotive use and must be heated before it will flow. Marine engines using HFO have fuel heaters and complex fuel conditioning systems. The very high sulphur content of untreated HFO means ships using it must operate within Emission Control Areas (ECAs) with scrubbers fitted, or switch to low-sulphur marine gas oil.'},
+    {title:'Bitumen / Residue',bp:'Boiling point: above 600°C | Carbon chain: C70+',body:'The heaviest residue that cannot be vaporised at atmospheric pressure. Bitumen is the solid/semi-solid material used for road surfacing and roofing. Other residues are further processed in a vacuum distillation unit or thermal cracker to extract additional value. Residual fuel oil from this fraction is the least refined and most polluting product from the barrel.'}
+  ];
+
+  function showFraction(idx){
+    const d = fracData[idx];
+    document.getElementById('frac-title').textContent = d.title;
+    document.getElementById('frac-bp').textContent = d.bp;
+    document.getElementById('frac-body').textContent = d.body;
+    document.getElementById('frac-info').style.borderColor = idx===3 ? 'var(--gold)' : 'var(--card-border)';
+    document.querySelectorAll('.fraction-g').forEach((g,i)=>{
+      g.querySelector('.frac-hover').style.opacity = i===idx ? '0.35' : (i===3?'0.18':'0.12');
+    });
+  }
+
+  const compData = [
+    {title:'Fuel Tank',desc:'Stores diesel fuel and supplies it to the rest of the fuel system. Modern tanks include a fuel level sensor, an in-tank fuel pump or strainer, and return line connections. Tank design prevents fuel starvation on corners and hills. Diesel tanks are often larger than petrol equivalents due to the lower volatility of diesel.'},
+    {title:'Lift Pump (Transfer Pump)',desc:'A low-pressure electric or mechanical pump that draws fuel from the tank and pushes it through the filter to the high-pressure pump. Typical output pressure: 3–8 bar. If the lift pump fails, the engine may crank but not start, or start and immediately stall as the high-pressure pump cannot prime itself from the tank.'},
+    {title:'Fuel Filter',desc:'Removes particulate contamination and separates water from the fuel. Diesel is hygroscopic — it absorbs water from the atmosphere. Water in the fuel damages precision-machined injection components and can cause corrosion. Most diesel filters have a water-in-fuel sensor and a manual drain plug. Replacement interval: typically 30,000–60,000 km.'},
+    {title:'High Pressure Pump',desc:'The heart of the CRDI system. Driven by the camshaft or a separate gear, it takes low-pressure fuel from the filter and compresses it to 1,600–2,500 bar. It is lubricated by the fuel itself — which is why running a diesel out of fuel can damage the pump. A pressure control valve on the pump regulates output pressure based on ECU demand.'},
+    {title:'Common Rail',desc:'A high-strength steel accumulator tube that stores pressurised fuel and distributes it equally to all injectors. The rail volume dampens pressure fluctuations between injection events. A rail pressure sensor provides live feedback to the ECU. A pressure relief valve protects the system if pressure exceeds safe limits. The rail can operate at pressures 1,000× higher than a car tyre.'},
+    {title:'Injectors',desc:'Electronically controlled nozzles that deliver precisely metered quantities of fuel into the combustion chamber at exactly the right moment. Each injector contains a solenoid (or piezo crystal) that lifts a needle valve when commanded by the ECU. The needle lifts, and fuel sprays through multiple microscopic holes (0.1–0.2mm diameter) as a fine mist. This atomisation is critical for complete, efficient combustion. Injectors are matched to their cylinder and must not be swapped between cylinders.'}
+  ];
+
+  function startCourse(){
+    document.getElementById('intro-screen').style.display='none';
+    document.getElementById('course-area').style.display='block';
+    buildNav();
+    showModule(0);
+  }
+
+  function buildNav(){
+    const nav = document.getElementById('module-nav');
+    nav.innerHTML = '';
+    MODULES.forEach((m,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'nav-btn' + (i===currentModule?' active':'') + (moduleComplete[i]?' done':'');
+      btn.textContent = (i+1)+'. '+m.split(' ')[0];
+      btn.onclick = ()=>showModule(i);
+      nav.appendChild(btn);
+    });
+  }
+
+  function showModule(idx){
+    document.querySelectorAll('.module-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('mod-'+idx).classList.add('active');
+    currentModule = idx;
+    buildNav();
+    updateProgress();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function changeModule(dir){
+    const next = currentModule + dir;
+    if(next>=0 && next<TOTAL_MODULES) showModule(next);
+  }
+
+  function updateProgress(){
+    const done = moduleComplete.filter(Boolean).length;
+    document.getElementById('progress-text').textContent = done + ' of '+TOTAL_MODULES+' modules complete';
+    document.getElementById('progress-fill').style.width = (done/TOTAL_MODULES*100)+'%';
+    // update intro grid
+    document.querySelectorAll('#intro-module-grid .module-card').forEach((c,i)=>{
+      c.classList.toggle('completed', moduleComplete[i]);
+    });
+  }
+
+  function answer(btn, qid, correct, feedback){
+    const opts = btn.parentElement.querySelectorAll('.quiz-opt');
+    opts.forEach(o=>{ o.disabled=true; });
+    btn.classList.add(correct?'correct':'wrong');
+    const fb = document.getElementById('fb-'+qid);
+    fb.textContent = feedback;
+    fb.className = 'quiz-feedback show ' + (correct?'ok':'bad');
+
+    const [modStr, qStr] = qid.replace('q','').split('-');
+    const modIdx = parseInt(modStr);
+    quizAnswered[modIdx].answered++;
+    if(correct) quizAnswered[modIdx].correct++;
+
+    if(quizAnswered[modIdx].answered === QPC){
+      setTimeout(()=>showQuizScore(modIdx), 400);
+    }
+  }
+
+  function showQuizScore(modIdx){
+    const sc = quizAnswered[modIdx];
+    const pct = Math.round(sc.correct/QPC*100);
+    quizScores[modIdx] = pct;
+    const el = document.getElementById('score-'+modIdx);
+    el.className = 'quiz-score show';
+    el.innerHTML = '<div class="big-score">'+sc.correct+'/'+QPC+'</div><p>'+pct+'% — '+
+      (pct===100?'Perfect! All correct.':pct>=67?'Good work! Review any questions you missed.':'Have another look at this module — some key concepts need reviewing.')+
+      '</p>';
+    moduleComplete[modIdx] = true;
+    document.getElementById('badge-'+modIdx).classList.add('show');
+    buildNav();
+    updateProgress();
+  }
+
+  function updateCompression(val){
+    const v = parseFloat(val);
+    const temp = Math.round(50 + (v-8)*(860/16));
+    document.getElementById('comp-temp').textContent = temp;
+    const pct = Math.round((v-8)/16*100);
+    const bar = document.getElementById('comp-bar');
+    const verdict = document.getElementById('comp-verdict');
+    bar.style.width = pct+'%';
+    if(v < 14){
+      bar.style.background = 'var(--muted)';
+      verdict.textContent = 'Petrol territory — no ignition without a spark';
+    } else if(v < 16){
+      bar.style.background = 'var(--warn)';
+      verdict.textContent = 'Borderline — transitional compression range';
+    } else {
+      bar.style.background = 'var(--gold)';
+      verdict.textContent = 'Diesel zone — air hot enough for compression ignition ✓';
+    }
+  }
+
+  function updateBoost(val){
+    const v = parseFloat(val);
+    document.getElementById('boost-val').textContent = v.toFixed(1);
+    const pct = Math.round(v/3.5*100);
+    const bar = document.getElementById('boost-bar');
+    const verdict = document.getElementById('boost-verdict');
+    bar.style.width = Math.max(5,pct)+'%';
+    if(v===0){
+      bar.style.background='var(--muted)';
+      verdict.textContent = 'Naturally aspirated — atmospheric pressure only';
+    } else if(v < 1){
+      bar.style.background='var(--gold)';
+      verdict.textContent = 'Light boost — mild power increase, low emissions';
+    } else if(v < 2){
+      bar.style.background='var(--gold)';
+      verdict.textContent = 'Standard boost — typical road diesel performance';
+    } else if(v < 2.8){
+      bar.style.background='var(--warn)';
+      verdict.textContent = 'High boost — performance diesel / stage 1 tune territory';
+    } else {
+      bar.style.background='var(--red-light)';
+      verdict.textContent = 'Extreme boost — performance / competition use, engine must be built to handle it';
+    }
+  }
+
+  function showComponent(idx){
+    const info = document.getElementById('comp-info');
+    document.getElementById('comp-title').textContent = compData[idx].title;
+    document.getElementById('comp-desc').textContent = compData[idx].desc;
+    info.classList.add('visible');
+    document.querySelectorAll('.component-btn').forEach((b,i)=>b.classList.toggle('selected',i===idx));
+  }
+
+  function toggleStroke(idx){
+    document.querySelectorAll('.stroke-card').forEach((c,i)=>{
+      c.classList.toggle('active', i===idx);
+    });
+  }
+
+  function finishCourse(){
+    moduleComplete[6] = true;
+    updateProgress();
+    document.getElementById('course-area').style.display='none';
+    document.getElementById('completion-screen').style.display='block';
+    const totalCorrect = quizAnswered.reduce((a,b)=>a+b.correct,0);
+    const totalQ = TOTAL_MODULES * QPC;
+    const pct = Math.round(totalCorrect/totalQ*100);
+    document.getElementById('final-score').textContent = totalCorrect+'/'+totalQ;
+    document.getElementById('final-pct').textContent = pct+'%';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function restartCourse(){
+    document.getElementById('completion-screen').style.display='none';
+    document.getElementById('course-area').style.display='block';
+    showModule(0);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // Init sliders
+  updateCompression(8);
+  updateBoost(0);
+
+  // ===== VALVE TIMING ANIMATION =====
+  // Diesel timing events (degrees from TDC of start of cycle = 0° = TDC power)
+  // 0-180: Power stroke (TDC → BDC)
+  // 180-360: Exhaust stroke (BDC → TDC)
+  // 360-540: Induction stroke (TDC → BDC)
+  // 540-720: Compression stroke (BDC → TDC)
+  // EVO = 180 - 150 = 30° (150° BBDC on power stroke)
+  // EVC = 360 + 15 = 375° (15° ATDC)
+  // IVO = 360 - 10 = 350° (10° BTDC)
+  // IVC = 540 + 40 = 580° (40° ABDC)
+
+  const VT = {
+    EVO: 30,   // exhaust opens
+    EVC: 375,  // exhaust closes
+    IVO: 350,  // inlet opens
+    IVC: 580,  // inlet closes
+    playing: false,
+    angle: 0,
+    speed: 4,
+    raf: null
+  };
+
+  const CX = 110, CY = 110, R = 95;
+
+  function vtDegToXY(deg, r) {
+    const rad = (deg - 90) * Math.PI / 180;
+    return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad) };
+  }
+
+  function vtArcPath(startDeg, endDeg, r) {
+    const start = vtDegToXY(startDeg, r);
+    const end = vtDegToXY(endDeg, r);
+    const span = ((endDeg - startDeg) + 720) % 720;
+    const large = span > 180 ? 1 : 0;
+    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${large} 1 ${end.x} ${end.y}`;
+  }
+
+  function vtInitDial() {
+    // Draw degree tick marks
+    const ticks = document.getElementById('vt-ticks');
+    ticks.innerHTML = '';
+    for (let d = 0; d < 720; d += 10) {
+      const inner = d % 90 === 0 ? R - 14 : d % 30 === 0 ? R - 8 : R - 5;
+      const p1 = vtDegToXY(d / 2, inner);
+      const p2 = vtDegToXY(d / 2, R - 1);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', p1.x); line.setAttribute('y1', p1.y);
+      line.setAttribute('x2', p2.x); line.setAttribute('y2', p2.y);
+      line.setAttribute('stroke', d % 180 === 0 ? '#f5f0e8' : '#2a4060');
+      line.setAttribute('stroke-width', d % 90 === 0 ? '1.5' : '1');
+      ticks.appendChild(line);
+    }
+
+    // Draw stroke zone arcs (on the dial at radius 78, thin coloured arcs)
+    const zones = document.getElementById('vt-zones');
+    zones.innerHTML = '';
+    const strokeZones = [
+      { start: 0, end: 180, color: '#c0392b', label: 'PWR' },
+      { start: 180, end: 360, color: '#8fa3b1', label: 'EXH' },
+      { start: 360, end: 540, color: '#27ae60', label: 'IND' },
+      { start: 540, end: 720, color: '#f0a500', label: 'COMP' }
+    ];
+    strokeZones.forEach(z => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', vtArcPath(z.start / 2, z.end / 2, 78));
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', z.color);
+      path.setAttribute('stroke-width', '4');
+      path.setAttribute('opacity', '0.35');
+      zones.appendChild(path);
+      // Label at midpoint
+      const mid = vtDegToXY((z.start + z.end) / 4, 78);
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', mid.x); txt.setAttribute('y', mid.y + 4);
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('font-family', 'Barlow Condensed,sans-serif');
+      txt.setAttribute('font-size', '9');
+      txt.setAttribute('fill', z.color);
+      txt.setAttribute('opacity', '0.8');
+      txt.textContent = z.label;
+      zones.appendChild(txt);
+    });
+
+    // Draw static exhaust and inlet valve arcs
+    const exhArc = document.getElementById('vt-exhaust-arc');
+    exhArc.setAttribute('d', vtArcPath(VT.EVO / 2, VT.EVC / 2, 64));
+    exhArc.style.opacity = '0.5';
+    const inlArc = document.getElementById('vt-inlet-arc');
+    inlArc.setAttribute('d', vtArcPath(VT.IVO / 2, VT.IVC / 2, 54));
+    inlArc.style.opacity = '0.5';
+
+    // Draw overlap arc
+    const ovlArc = document.getElementById('vt-overlap-arc');
+    ovlArc.setAttribute('d', vtArcPath(VT.IVO / 2, VT.EVC / 2, 59));
+  }
+
+  function vtGetStrokeInfo(angle) {
+    if (angle < 180) return { name: 'Power stroke', desc: 'Piston moving down — combustion driving crankshaft', color: '#c0392b' };
+    if (angle < 360) return { name: 'Exhaust stroke', desc: 'Piston rising — burnt gases pushed out of cylinder', color: '#8fa3b1' };
+    if (angle < 540) return { name: 'Induction stroke', desc: 'Piston moving down — fresh air drawn into cylinder', color: '#27ae60' };
+    return { name: 'Compression stroke', desc: 'Piston rising — air compressed to 1/20th volume', color: '#f0a500' };
+  }
+
+  function vtLiftPct(angle, open, close) {
+    const span = ((close - open) + 720) % 720;
+    const pos = ((angle - open) + 720) % 720;
+    if (pos > span) return 0;
+    const norm = pos / span;
+    return Math.round(Math.sin(norm * Math.PI) * 100);
+  }
+
+  function vtUpdate(angle) {
+    // Needle
+    const needleDeg = angle / 2;
+    const needleEnd = vtDegToXY(needleDeg, 88);
+    document.getElementById('vt-needle').setAttribute('x2', needleEnd.x);
+    document.getElementById('vt-needle').setAttribute('y2', needleEnd.y);
+    document.getElementById('vt-needle-tip').setAttribute('cx', needleEnd.x);
+    document.getElementById('vt-needle-tip').setAttribute('cy', needleEnd.y);
+
+    // Angle text
+    const display = angle > 360 ? angle - 360 : angle;
+    document.getElementById('vt-angle-text').textContent = display + '°';
+    document.getElementById('vt-rev-text').textContent = angle > 360 ? 'Rev 2' : 'Rev 1';
+    document.getElementById('vt-deg-readout').textContent = angle + '°';
+    document.getElementById('vt-scrub').value = angle;
+
+    // Valve states
+    const exhOpen = (angle >= VT.EVO && angle <= VT.EVC);
+    const inlOpen = (angle >= VT.IVO && angle <= VT.IVC);
+    const overlap = exhOpen && inlOpen;
+
+    const exhPct = vtLiftPct(angle, VT.EVO, VT.EVC);
+    const inlPct = vtLiftPct(angle, VT.IVO, VT.IVC);
+
+    document.getElementById('vt-inlet-bar').style.width = inlPct + '%';
+    document.getElementById('vt-exhaust-bar').style.width = exhPct + '%';
+
+    document.getElementById('vt-inlet-status').textContent = inlOpen ? 'Open — ' + inlPct + '% lift' : 'Closed';
+    document.getElementById('vt-exhaust-status').textContent = exhOpen ? 'Open — ' + exhPct + '% lift' : 'Closed';
+
+    // Overlap callout
+    document.getElementById('vt-overlap-callout').style.display = overlap ? 'block' : 'none';
+
+    // Stroke label
+    const si = vtGetStrokeInfo(angle);
+    document.getElementById('vt-stroke-name').textContent = si.name;
+    document.getElementById('vt-stroke-name').style.color = si.color;
+    document.getElementById('vt-stroke-desc').textContent = si.desc;
+  }
+
+  function vtLoop() {
+    if (!VT.playing) return;
+    VT.angle = (VT.angle + VT.speed * 0.5) % 720;
+    vtUpdate(Math.round(VT.angle));
+    VT.raf = requestAnimationFrame(vtLoop);
+  }
+
+  function vtTogglePlay() {
+    VT.playing = !VT.playing;
+    document.getElementById('vt-play-btn').textContent = VT.playing ? '⏸ PAUSE' : '▶ PLAY';
+    if (VT.playing) vtLoop();
+    else cancelAnimationFrame(VT.raf);
+  }
+
+  function vtScrub(val) {
+    VT.angle = parseInt(val);
+    vtUpdate(VT.angle);
+  }
+
+  function vtChangeSpeed() {
+    VT.speed = parseInt(document.getElementById('vt-speed').value);
+  }
+
+  // Init
+  vtInitDial();
+  vtUpdate(0);
+</script>
+</body>
+</html>
